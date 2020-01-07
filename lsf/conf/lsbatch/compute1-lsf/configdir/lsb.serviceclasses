@@ -1,0 +1,37 @@
+#
+# $Revision$Date$
+#
+# After editing this file, run "badmin reconfig" to apply your changes.
+#
+# This file can contain the following types of sections:
+# o  ServiceClass
+#
+# ServiceClass sections have the following parameters:
+#
+# ACCESS_CONTROL       Restricts access to a guarantee SLA. Guarantee
+#                      SLAs only.
+# AUTO_ATTACH          Enabling AUTO_ATTACH when a guarantee SLA has
+#                      ACCESS_CONTROL configured results in submitted
+#                      jobs automatically attaching to the guarantee
+#                      SLA if they have access. Guarantee SLAs only.
+# DESCRIPTION          Description of the service class.
+# GOALS                Defines the service-level goals for the service
+#                      class, e.g. "guarantee".
+# NAME                 A unique name that identifies the service class.
+
+#Begin ServiceClass
+#NAME = sc1
+#DESCRIPTION = enable guarantees for project 1
+#GOALS = [ guarantee ]
+#ACCESS_CONTROL= QUEUES[ normal ] PROJECTS[ prj1 ]
+#AUTO_ATTACH = y
+#End ServiceClass
+
+#Begin ServiceClass
+#NAME = sc2
+#DESCRIPTION = enable guarantees for priority jobs
+#GOALS = [ guarantee ]
+#ACCESS_CONTROL = QUEUES[ priority ]
+#AUTO_ATTACH = Y
+#End ServiceClass
+

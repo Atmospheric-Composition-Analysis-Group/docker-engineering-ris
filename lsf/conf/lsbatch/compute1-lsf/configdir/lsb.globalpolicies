@@ -1,0 +1,51 @@
+#
+# Policies for global fairshare scheduling.
+#
+# After editing this file, run "badmin gpdrestart" to reconfigure the global policy daemon.
+#
+# This file can contain the following types of sections:
+# o  GlobalFairshare
+
+# GlobalFairshare sections set policies for global fairshare
+# scheduling.
+
+# GlobalFairshare sections have the following parameters:
+
+# NAME sets the name of the global fairshare policy.
+# Specify any ASCII string up to 60 characters long.
+# You can use letters, digits, underscores (_), dashes (-) and periods (.) in
+# the name, but "all" is reserved as a keyword.
+
+# PARTICIPANTS defines queues for the clusters that participate in the global
+# fairshare policy. The queue name and the cluster name must not include
+# the @ character. A cluster can only have one queue. If PARTICIPANTS is
+# "q1@cluster1 q2@cluster1", q2@cluster1 will be ignored.
+
+# SYNC_MODE defines which share accounts in the fairshare tree of each
+# partcipant will participate into the global fairshare policy.
+# If set to "all", all participants synchronize fairshare load for the whole
+# fairshare tree.
+# If set to "partial", depends on the configuration of the FS_POLICY setting
+# in lsb.users for each cluster. Not all user share accounts in the fairshare
+# tree will synchronize fairshare load globally. Only the defined fairshare
+# node needs global synchronization.
+
+# SYNC_INTERVAL defines time interval, in seconds, for which the gpolicyd and
+# mbatchd exchange fairshare load information.
+# Specify a value from 5 seconds to 3600 seconds. If the specified value is out
+# of range, the default value (30) is used.
+
+# DESCRIPTION defines the description of the global fairshare policy.
+# The text can include any characters, including white space. Extend the text to
+# multiple lines by ending the preceding line with a backslash (\). The maximum
+# length for the text is 512 characters.
+
+
+#Begin GlobalFairshare
+#NAME = policy1
+#PARTICIPANTS = queue1@cluster1 queue1@cluster2 queue1@cluster3
+#SYNC_MODE = all
+#SYNC_INTERVAL = 15
+#DESCRIPTION = one policy of global fairshare scheduling
+#End GlobalFairshare
+

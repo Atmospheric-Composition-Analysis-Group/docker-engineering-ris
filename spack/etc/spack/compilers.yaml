@@ -1,0 +1,27 @@
+compilers:
+- compiler:
+    environment: {}
+    extra_rpaths: []
+    flags: {}
+    modules: []
+    operating_system: centos7
+    paths:
+      cc: /opt/intel/bin/icc
+      cxx: /opt/intel/bin/icpc
+      f77: /opt/intel/bin/ifort
+      fc: /opt/intel/bin/ifort
+    spec: intel@2020
+    target: x86_64
+- compiler:
+    environment: {}
+    extra_rpaths: []
+    flags: {}
+    modules: []
+    operating_system: centos7
+    paths:
+      cc: /bin/gcc
+      cxx: /bin/g++
+      f77: /bin/gfortran
+      fc: /bin/gfortran
+    spec: gcc@4.8.5
+    target: x86_64

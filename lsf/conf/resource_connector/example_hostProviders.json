@@ -1,0 +1,40 @@
+{
+    "providers":[
+        {
+            "name": "ego",
+            "type": "egoProv",
+            "confPath": "resource_connector/ego",
+            "scriptPath": "resource_connector/ego"
+        },
+        {
+            "name": "openstack",
+            "type": "openstackProv",
+            "confPath": "resource_connector/openstack",
+            "scriptPath": "resource_connector/openstack"
+        },
+        {
+            "name": "aws",
+            "type": "awsProv",
+            "confPath": "resource_connector/aws",
+            "scriptPath": "resource_connector/aws"
+        },
+        {
+            "name": "azure",
+            "type": "azureProv",
+            "confPath": "resource_connector/azure",
+            "scriptPath": "resource_connector/azure"
+        },
+        {
+            "name": "softlayer",
+            "type": "softlayerProv",
+            "confPath": "resource_connector/softlayer",
+            "scriptPath": "resource_connector/softlayer"
+        },
+        {
+            "name": "google",
+            "type": "googleProv",
+            "confPath": "resource_connector/google",
+            "scriptPath": "resource_connector/google"
+        }
+    ]
+}

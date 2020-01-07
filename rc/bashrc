@@ -1,0 +1,48 @@
+# General environment config
+export CC=icc
+export CXX=icpc
+export FC=ifort
+
+# OpenMP config
+export OMP_NUM_THREADS=$LSB_DJOB_NUMPROC
+export OMP_STACKSIZE=500m
+
+# OpenMPI config
+export OMPI_MCA_btl_vader_single_copy_mechanism=none
+
+# GEOS-Chem environment variables
+if [ -x "$(command -v nc-config)" ]; then
+	export GC_BIN=$(nc-config --prefix)/bin
+	export GC_INCLUDE=$(nc-config --prefix)/include
+	export GC_LIB=$(nc-config --prefix)/lib
+fi
+
+if [ -x "$(command -v nf-config)" ]; then
+	export GC_F_BIN=$(nf-config --prefix)/bin
+	export GC_F_INCLUDE=$(nf-config --prefix)/include
+	export GC_F_LIB=$(nf-config --prefix)/lib
+fi
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/intel/bin:/opt/spack/bin
+if [ -x "$(command -v spack)" ]; then
+        export NETCDF_HOME=$(spack location -i netcdf-c)
+        export GC_BIN=$NETCDF_HOME/bin 
+        export GC_INCLUDE=$NETCDF_HOME/include
+        export GC_LIB=$NETCDF_HOME/lib 
+        export NETCDF_FORTRAN_HOME=$(spack location -i netcdf-fortran) 
+        export GC_F_BIN=$NETCDF_FORTRAN_HOME/bin 
+        export GC_F_INCLUDE=$NETCDF_FORTRAN_HOME/include 
+        export GC_F_LIB=$NETCDF_FORTRAN_HOME/lib
+fi
+
+source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh intel64 && \
+source /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64 && \
+source /opt/ibm/lsfsuite/lsf/conf/profile.lsf 
+
+. /opt/spack/share/spack/setup-env.sh
+export MODULEPATH=$MODULEPATH:/usr/share/modulefiles
+export gFTL_ROOT=/opt/gFTL/GFTL-1.2/include
+spack load hdf5
+spack load netcdf-c
+spack load netcdf-fortran
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib

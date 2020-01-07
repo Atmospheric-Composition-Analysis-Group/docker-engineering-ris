@@ -1,0 +1,29 @@
+# $RCSfile$Revision$Date$
+# EGO kernel parameters configuration file
+# 
+
+# EGO master candidate host
+EGO_MASTER_LIST="compute1-master-1.ris.wustl.edu compute1-master-2.ris.wustl.edu compute1-master-3.ris.wustl.edu"
+
+# EGO daemon port number
+EGO_KD_PORT=7870
+EGO_PEM_PORT=7871
+
+# EGO service directory
+EGO_ESRVDIR=/opt/ibm/lsfsuite/lsf/conf/ego/compute1-lsf/eservice
+
+# EGO security configuration
+EGO_SEC_PLUGIN=sec_ego_default
+EGO_SEC_CONF=/opt/ibm/lsfsuite/lsf/conf/ego/compute1-lsf/kernel
+
+# EGO event configuration
+#EGO_EVENT_MASK=LOG_INFO
+#EGO_EVENT_PLUGIN=eventplugin_snmp[SINK=host,MIBDIRS=/opt/ibm/lsfsuite/lsf/conf/ego/compute1-lsf/kernel/mibs]
+
+# Parameters related to dynamic adding/removing host
+# EGO_GET_CONF=LIM
+
+
+EGO_CONFDIR=/opt/ibm/lsfsuite/lsf/conf/ego/compute1-lsf/kernel
+EGO_TOP=/opt/ibm/lsfsuite/lsf
+EGO_GETCONF=lim

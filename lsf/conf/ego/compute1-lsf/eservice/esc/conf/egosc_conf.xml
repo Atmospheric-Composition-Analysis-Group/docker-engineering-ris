@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceControllerConfiguration>
+  <ESC_PORT>7872</ESC_PORT>
+  <ESC_LOGDIR>/opt/ibm/lsflogs</ESC_LOGDIR>
+  <ESC_LOGMASK>LOG_WARNING</ESC_LOGMASK>
+</ServiceControllerConfiguration>

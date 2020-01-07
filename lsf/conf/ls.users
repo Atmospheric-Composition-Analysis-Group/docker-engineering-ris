@@ -1,0 +1,15 @@
+# $RCSfile$Revision$Date$
+# This file defines the membership of user and client, which will 
+# be used by globauth program.
+#
+# The format is same as /etc/group 
+#
+# client_name1:::user1,user2,user3
+# 
+# Each line represents client, the client name is followed by a colon.
+
+Project1:::user1,user2
+Project2:::user1,user2,user3
+default:::
+
+

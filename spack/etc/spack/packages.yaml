@@ -1,0 +1,123 @@
+packages:
+  tcl:
+    paths:
+      tcl: /usr
+    buildable: False
+  environment-modules:
+    paths:
+      environment-modules: /usr
+    buildable: False
+  pkgconf:
+    paths:
+      pkgconf: /usr
+    buildable: False
+  xz:
+    paths:
+      xz: /usr
+    buildable: False
+  zlib:
+    paths:
+      zlib: /usr
+    buildable: False
+  libxml2:
+    paths:
+      libxml2: /usr
+    buildable: False
+  libsigsegv:
+    paths:
+      libsigsegv: /usr
+    buildable: False
+  m4:
+    paths:
+      m4: /usr
+    buildable: False
+  ncurses:
+    paths:
+      ncurses: /usr
+    buildable: False
+  readline:
+    paths:
+      readline: /usr
+    buildable: False
+  gdbm:
+    paths:
+      gdbm: /usr
+    buildable: False
+  perl:
+    paths:
+      perl: /usr
+    buildable: False
+  autoconf:
+    paths:
+      autoconf: /usr
+    buildable: False
+  automake:
+    paths:
+      automake: /usr
+    buildable: False
+  libtool:
+    paths:
+      libtool: /usr
+    buildable: False
+  texinfo:
+    paths:
+      texinfo: /usr
+    buildable: False
+  findutils:
+    paths:
+      findutils: /usr
+    buildable: False
+  util-macros:
+    paths:
+      util-macros: /usr
+    buildable: False 
+  libpciaccess:
+    paths:
+      libpciaccess: /usr
+    buildable: False
+  numactl:
+    paths:
+      numactl: /usr
+    buildable: False
+  bzip2:
+    paths:
+      bzip2: /usr
+    buildable: False
+  tar:
+    paths:
+      tar: /usr
+    buildable: False
+  gettext:
+    paths:
+      gettext: /usr
+    buildable: False
+  help2man:
+    paths:
+      help2man: /usr
+    buildable: False
+  bison:
+    paths:
+      bison: /usr
+    buildable: False
+  libuuid:
+    paths:
+      libuuid: /usr
+    buildable: False
+  flex:
+    paths:
+      flex: /usr
+    buildable: False
+  cmake:
+    paths:
+      cmake: /usr
+    buildable: False
+  lsf:
+    paths:
+      lsf@10.1: /opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64
+    buildable: False
+  openmpi:
+    paths:
+      openmpi: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+    buildable: False
+  all:
+    compiler: [ intel@2020 ]

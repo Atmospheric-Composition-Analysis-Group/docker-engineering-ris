@@ -1,0 +1,39 @@
+$Revision$Date$
+
+# After editing this file, run "badmin reconfig" to apply your changes.
+
+# This file is used to configure LSF for the interoperability with NQS hosts 
+# (see lsb.nqsmaps(5) for details).
+
+# There are two sections in this file.  The Hosts section is used to give 
+# machine-IDs and OS types of the LSF master host and the related NQS hosts.  
+# The Users section specifies the user name mapping from LSF hosts to each 
+# of the NQS hosts.
+
+# HOST_NAME can be official or alias name of a host.  MID is the machine-ID 
+# of the host.  OS_TYPE is the operating system type of the NQS host.  The 
+# OS_TYPE may be one of ULTRIX, HPUX, AIX, SOLARIS, SUNOS, IRIX, OSF1, CONVEX 
+# and UNICOS.  For an LSF host, a "()" must be specified. 
+
+# FROM_NAME is the user name on LSF hosts.  TO_NAME specifies the user names
+# which the FROM_NAME is mapped to on different NQS hosts.  Each of the
+# user names is specified in the format of username@hostname.  The hostname 
+# can be the official or alias NQS host name, while username is the login 
+# name on this NQS host.
+ 
+Begin Hosts
+HOST_NAME        MID   OS_TYPE
+#cray001          1     UNICOS     # NQS host; should specify OS_TYPE
+#sun0101          2     SOLARIS    # NQS host
+#sgi006           3     IRIX       # NQS host
+#apple            4      ()        # LSF host; don't need to give OS_TYPE
+#orange           5      ()        # LSF host
+#grape            6      ()        # LSF host
+End Hosts
+
+Begin Users
+FROM_NAME      TO_NAME
+#chris          (chrisl@cray001 lchris@sgi006)
+#ken            (sken@cray001)
+End Users
+

@@ -1,0 +1,166 @@
+# $Revision$Date$
+#
+# After editing this file, run "badmin reconfig" to apply your changes.
+#
+# Policies for resource allocation. 
+#
+# This file can contain the following types of sections:
+# o  Limit
+# o  ResourceReservation
+# o  HostExport
+# o  SharedResourceExport 
+# o  ReservationUsage
+# o  GuaranteedResourcePool
+
+# Limit sections set limits for how much resources must be available
+# for different classes of jobs to start, and which resource
+# consumers the limits apply to.
+
+# Each set of limits is defined in a Limit section enclosed by
+# Begin Limit and End Limit.
+
+# Limit sections have the following parameters:
+
+# SLOTS sets a limit on the total number of slots that can be used by
+# specific jobs.
+
+# SLOTS_PER_PROCESSOR sets a limit on the number of slots based on the
+# number of processor on each of the hosts affected by the limit.  It
+# can only be used with the PER_HOST parameter.
+
+# MEM, SWP, and TMP set limits (in MB) on the amount of memory, swap and
+# temp space.  If the PER_HOST parameter is set for the limit, then the
+# amount can also be given as a percentage of total memory, swap or temp
+# on each host in the limit.
+
+# JOBS means maximum number of jobs available to resource consumers.
+# Specify a positive integer greater than or equal to 0. JOBS applies to
+# all jobs with status of RUN, SSUSP and USUSP, as well as
+# jobs that have reserved slots but are still pending.
+
+# LICENSE and RESOURCE set limits on the total amount of shared resources
+# used by specific jobs.
+
+# QUEUES, USERS, HOSTS, and PROJECTS specify which jobs the limits apply
+# to.  They are space-separated lists of names of queues in lsb.queues,
+# users and user groups in lsb.users, hosts and host groups in
+# lsb.hosts, and projects.
+
+# You can use PER_QUEUE, PER_USER, PER_HOST, and PER_PROJECT instead of
+# QUEUES, USERS, HOSTS, and PROJECTS respectively. In this case, a separate
+# limit is created for each queue, or each user, or each host, or each project
+# specified.
+
+#Begin Limit
+#NAME = develop_group_limit
+#USERS = develop
+#PER_HOST = all
+#SLOTS = 1
+#MEM = 50%
+#JOBS = 2
+#End Limit
+
+# Example: limit usage of hosts in 'license1' group: 
+# - 10 jobs can run from normal queue, which use up to 10 slots
+# - any number can run from short queue, but only can use 200M mem in total
+# - each other queue can run 10 jobs, each queue using up to 30 slots and 300M mem in total
+#Begin Limit
+#PER_QUEUE               HOSTS       SLOTS   MEM  JOBS   # Example
+#normal                  license1    10      -     10
+#short                   license1    -       200   - 
+#(all ~normal ~short)    license1    30      300   10
+#End Limit
+
+# Example: Jobs from 'crash' project can use 10 'lic1' licenses, while jobs
+# from all other projects together can use 5.
+#Begin Limit
+#PROJECTS        LICENSE
+#crash           ([lic1, 10])
+#(all ~crash)    ([lic1, 5])
+#End Limit
+
+# Advance Reservation Policy Definition Example
+
+# Allow user "user1 user2" to be able to make reservations on 
+# "hostA hostB" between 8:00 and 18:00 every day.
+#Begin ResourceReservation
+#NAME  = dayPolicy
+#USERS = user1 user2
+#HOSTS = hostA hostB
+#TIME_WINDOW = 8:00-18:00      
+#End ResourceReservation 
+
+# Allow all users in user group ugroup1 except user1 to make 
+# reservations on any host in hgroup1, except hostB 
+# between 20:00 and 8:00 every day.
+#Begin ResourceReservation
+#NAME  = nightPolicy
+#USERS  = ugroup1 ~user1
+#HOSTS  = hgroup1 ~hostB
+#TIME_WINDOW = 20:00-8:00
+#End ResourceReservation
+
+# ReservationUsage sections define the usage of Shared Numeric
+# Resource for parallel jobs. Usages defined here overwrite the
+# RESOURCE_RESERVE_PER_TASK parameter defined in lsb.params
+
+# ReservationUsage Definition Example
+
+#Begin ReservationUsage
+#RESOURCE             METHOD        RESERVE
+#tmp                     -             Y
+#swp                     -             Y
+#licenseX             PER_JOB          Y
+#licenseY             PER_HOST         N
+#licenseZ             PER_TASK         -
+#End ReservationUsage
+
+# A GuaranteedResourcePool section accepts the following parameters:
+#
+# NAME is the name of the resource pool
+# TYPE is the type of resource (for example slots, hosts or package)
+# HOSTS (optional) is a list of hosts eligible for membership in the pool
+# RES_SELECT (optional) is the resource requirement select string used to
+# filter host membership
+# DISTRIBUTION defines resource distribution among service classes defined in
+# lsb.serviceclasses
+# LOAN_POLICIES (optional) specifies how resources are to be lent out when not
+# needed immediately to satisfy guarantees
+#   Loan polices include:
+#     QUEUES[q1 q2... | all] lend only to the listed queues
+#     DURATION[number_minutes] lend only to jobs with duration less than this
+#     CLOSE_ON_DEMAND do not lend resources when there are pending jobs
+#     with guarantees in the pool
+#     RETAIN[ number_resource[%] ] reserve this amount of resources exclusively
+#     for jobs with guarantees in the pool
+# DESCRIPTION (optional) a description of the guaranteed resource pool
+
+#Begin GuaranteedResourcePool
+#NAME = slotPool
+#TYPE = slots
+#HOSTS = hostA hostB hostC 
+#DISTRIBUTION = ([sc1, 5] )
+#LOAN_POLICIES = QUEUES[normal] DURATION[10]
+#DESCRIPTION = guaranteed slot policy
+#End GuaranteedResourcePool
+
+#Begin GuaranteedResourcePool
+#NAME = hostPool 
+#TYPE = hosts
+#HOSTS = all 
+#RES_SELECT = model == Intel_EM64T
+#DISTRIBUTION = ([sc1, 25%] [sc2, 50%])
+#LOAN_POLICIES = QUEUES[normal] RETAIN[5]
+#DESCRIPTION = guaranteed host policy
+#End GuaranteedResourcePool
+
+#Begin GuaranteedResourcePool
+#NAME = packagePool
+#TYPE = package[slots=1:mem=4096]
+#HOSTS = hgroup1
+#DISTRIBUTION = ([sc1, 25%] [sc2, 25%])
+#LOAN_POLICIES = QUEUES[all] RETAIN[10%]
+#DESCRIPTION = guaranteed package policy, where each package comprises \
+#              slots and memory together on a single host
+#End GuaranteedResourcePool
+

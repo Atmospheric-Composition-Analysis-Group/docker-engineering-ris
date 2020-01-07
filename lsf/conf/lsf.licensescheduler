@@ -1,0 +1,144 @@
+#
+# After editing this file, run "bladmin reconfig", "lsadmin reconfig"
+# and "badmin mbdrestart" to apply your changes.
+#
+# This is the License Scheduler configuration file for Basic
+# Edtion. This file is read by all components of License Scheduler:
+# o The system daemon bld.
+# o The commands that query the daemon about its status
+#   and the status of the license tokens.
+# 
+# This file does not need to be on a shared file system; however,
+# the information must be consistent if duplicated, especially
+# the Parameters section that defines common variables such as the
+# daemon listening port.
+#
+
+#
+# The Parameters section is used by both the daemon and the library.
+#
+Begin Parameters
+
+# The License Scheduler listening port.
+PORT = 9581
+
+# The name of the host running the License Scheduler daemon. 
+# All components of the License Scheduler system must be able to
+# resolve the name of the host where the system daemon bld
+# is running. Specify a fully qualified domain name if necessary.
+#
+HOSTS = hostname
+
+# The License Scheduler administrator.
+ADMIN = lsfadmin
+
+# This parameter determines how frequently bld should
+# call lmstat to gather license usage information.
+# If the parameter is not specified, the default is 60 seconds. 
+#
+LM_STAT_INTERVAL=30
+
+# This parameter is the full path to the *directory* where
+# the lmutil (or lmstat) command is installed.
+# This parameter is mandatory and does not have a default value.
+#
+LMSTAT_PATH = <lmutil_directory_full_path> 
+
+# Optional. The full path to the *directory* where the RLM
+# commands (such as rlmutil and rlmremove) are installed.
+# The default value is the LMSTAT_PATH value.
+#
+#RLMSTAT_PATH=/usr/bin
+#
+
+# This parameter specifies which license manager system is used by the license
+# servers. License Scheduler determines the method to communicate to license
+# servers based on this parameter value.
+# The default value is FLEXLM.
+#
+#LM_TYPE=RLM
+#
+
+# License Scheduler functionality differs for project mode and cluster 
+# mode. License Scheduler Basic Edition only supports the cluster 
+# mode feature configured with one cluster and one service domain.
+# The default value is Y.
+#
+CLUSTER_MODE=y
+
+End Parameters
+
+# Clusters
+#
+# The Clusters section defines the valid name of the LSF cluster that
+# can talk with the bld daemon. License Scheduler Basic Edition only
+# supports one cluster.
+#
+Begin Clusters
+CLUSTERS
+#myCluster
+compute1-lsf
+End Clusters
+
+# Service Domain
+#
+# This section groups the host names of your license servers
+# into a service domain. The service domain represents the set 
+# of physical license servers that serve a specific design center 
+# or a group of design centers.
+
+# For example, a design center A can use a group of license
+# servers (x y z) on its local area network and another 
+# group (u v w) located on the corporate wide area network.
+# These two groups constitute two server domains.
+# The location of the physical license servers must be specified 
+# as port@host or only host if the FLEXlm server uses the default
+# port.
+#
+
+# To get new users started, the following example defines a simple
+# service domain. 
+# Replace "port@server" with your own license server.
+#
+Begin ServiceDomain
+NAME = LanServer
+LIC_SERVERS = ((port@myserver))
+End ServiceDomain
+
+# The following example illustrates a ServiceDomain configuration 
+# of 3 redundant license servers. Note that the parenthesis around the
+# group of host names is mandatory.
+#
+Begin ServiceDomain
+NAME = LanServer1
+LIC_SERVERS = ((1888@server1 1888@server2 1888@server3) (1999@serverB) (2000@serverC) (2001@serverZ 2002@serverY 2003@serverZ))
+End ServiceDomain
+
+#
+# The following example illustrates a ServiceDomain where the license servers
+# use Reprise License Manager to manage licenses. rlmServer1 has a failover
+# server rlmServer2.
+#
+#Begin ServiceDomain
+#NAME = RLMServer
+#LIC_SERVERS = ((5053@rlmServer1 5053@rlmServer2) (5053@rlmServerB) (5053@rlmServerC))
+#LM_TYPE=RLM
+#End ServiceDomain
+
+# Feature section
+#
+# This section configures the license feature that you want License Scheduler
+# to control. There must be one section for each feature. 
+# If CLUSTER_MODE is not defined as Y in Parameter section, CLUSTER_MODE
+# must set Y in Feature section.
+#
+# This is example of defining a LAN Feature in cluster mode using
+# tokens from the LanServer service domain.
+#
+Begin Feature
+NAME = myFeature1
+CLUSTER_DISTRIBUTION=LanServer(compute1-lsf 1)
+End Feature
+
+
+

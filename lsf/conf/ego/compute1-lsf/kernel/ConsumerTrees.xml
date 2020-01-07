@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DistributionPolicyConfiguration xmlns="http://www.platform.com/vem/2005/05/schema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.platform.com/vem/2005/05/schema ../ego.xsd">
+  <Version>1.2</Version>
+  <ClusterAdmin>Admin</ClusterAdmin>
+  <ConsumerHierarchy>
+    <Consumer ConsumerName="ManagementServices">
+      <ConsumerProperties>
+	<User>Admin</User>
+      </ConsumerProperties>
+      <Consumer ConsumerName="EGOManagementServices">
+	<ConsumerProperties>
+	  <User>Admin</User>
+	  <ExecutionUser>lsfadmin</ExecutionUser>
+	  <ReclamationTimeout>210</ReclamationTimeout>
+	  <Rebalance>false</Rebalance>
+	</ConsumerProperties>
+      </Consumer>
+      <Consumer ConsumerName="LSFManagementServices">
+	<ConsumerProperties>
+	  <User>Admin</User>
+	  <ExecutionUser>root</ExecutionUser>
+	  <ReclamationTimeout>210</ReclamationTimeout>
+	  <Rebalance>false</Rebalance>
+	</ConsumerProperties>
+      </Consumer>
+    </Consumer>
+    <Consumer ConsumerName="SampleApplications">
+      <ConsumerProperties>
+	<User>Guest</User>
+      </ConsumerProperties>
+      <Consumer ConsumerName="EclipseSamples">
+	<ConsumerProperties>
+	  <User>Guest</User>
+	  <ExecutionUser>lsfadmin</ExecutionUser>
+	  <!-- The format for Timeout is an XML Schema duration. It's  -->
+	  <!-- described at http://www.w3.org/TR/xmlschema-2/#duration -->
+	  <!-- reclaim lent resources within 30 seconds -->
+	  <ReclamationTimeout>30</ReclamationTimeout>
+	  <Rebalance>false</Rebalance>
+	</ConsumerProperties>
+      </Consumer>
+    </Consumer>
+    <Consumer ConsumerName="ClusterServices">
+      <ConsumerProperties>
+        <User>Admin</User>
+        <ExecutionUser>lsfadmin</ExecutionUser>
+      </ConsumerProperties>
+      <Consumer ConsumerName="EGOClusterServices">
+      </Consumer>
+      <Consumer ConsumerName="LSFClusterServices">
+      </Consumer>
+    </Consumer>
+  </ConsumerHierarchy>
+  <DistributionTree DistributionTreeName="ManagementHosts">
+    <ResourceGroupName>ManagementHosts</ResourceGroupName>
+    <Consumer ConsumerName="ManagementServices">
+      <DistributionPolicies>
+	<Priority>50</Priority>
+	<SharingPolicy>
+	  <Shares Type="ratio">1</Shares>
+	</SharingPolicy>
+	<OwnershipPolicy>
+	  <Ownership Type="absolute">7</Ownership>
+	</OwnershipPolicy>
+      </DistributionPolicies>
+      <Consumer ConsumerName="EGOManagementServices">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	  <OwnershipPolicy>
+	    <Ownership Type="absolute">7</Ownership>
+	  </OwnershipPolicy>
+	</DistributionPolicies>
+      </Consumer>
+      <Consumer ConsumerName="LSFManagementServices">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	</DistributionPolicies>
+      </Consumer>
+    </Consumer>
+    <Consumer ConsumerName="SampleApplications">
+      <DistributionPolicies>
+	<Priority>50</Priority>
+	<SharingPolicy>
+	  <Shares Type="ratio">1</Shares>
+	</SharingPolicy>
+      </DistributionPolicies>
+      <Consumer ConsumerName="EclipseSamples">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	</DistributionPolicies>
+      </Consumer>
+    </Consumer>
+  </DistributionTree>
+  <DistributionTree DistributionTreeName="InternalResourceGroup">
+    <ResourceGroupName>InternalResourceGroup</ResourceGroupName>
+    <Consumer ConsumerName="ClusterServices">
+      <DistributionPolicies>
+	<Priority>50</Priority>
+	<SharingPolicy>
+	  <Shares Type="ratio">1</Shares>
+	</SharingPolicy>
+      </DistributionPolicies>
+      <Consumer ConsumerName="EGOClusterServices">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	</DistributionPolicies>
+      </Consumer>
+      <Consumer ConsumerName="LSFClusterServices">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	</DistributionPolicies>
+      </Consumer>
+    </Consumer>
+  </DistributionTree>
+  <DistributionTree DistributionTreeName="ComputeHosts">
+    <ResourceGroupName>ComputeHosts</ResourceGroupName>
+    <Consumer ConsumerName="SampleApplications">
+      <DistributionPolicies>
+	<Priority>50</Priority>
+	<SharingPolicy>
+	  <Shares Type="ratio">1</Shares>
+	</SharingPolicy>
+      </DistributionPolicies>
+      <Consumer ConsumerName="EclipseSamples">
+	<DistributionPolicies>
+	  <Priority>50</Priority>
+	  <SharingPolicy>
+	    <Shares Type="ratio">1</Shares>
+	  </SharingPolicy>
+	</DistributionPolicies>
+      </Consumer>
+    </Consumer>
+  </DistributionTree>
+</DistributionPolicyConfiguration>

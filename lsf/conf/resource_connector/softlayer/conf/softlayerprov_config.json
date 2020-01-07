@@ -1,0 +1,6 @@
+{
+  "LogLevel": "INFO",
+  "SOFTLAYER_CREDENTIAL_FILE": "/opt/lsf/conf/resource_connector/softlayer/conf/credentials",
+  "SOFTLAYER_DOMAIN_NAME": "hostfactory.com"
+  ,"UserDataTimeout": 90
+}

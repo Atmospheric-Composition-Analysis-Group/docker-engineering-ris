@@ -1,0 +1,600 @@
+# ******************
+# $Revision$Date$
+# ******************
+# After editing this file, run "badmin reconfig" to apply your changes.
+#
+# NAME:          lsb.applications
+# 
+# PURPOSE:       Application profile definitions. 
+#
+# DESCRIPTION:   This file affects the scheduling and runtime behavior of LSF 
+# for jobs associated with an application.
+#
+# The application profile does not enforce a particular application binary, 
+# which means the profile can also be used to specify default attributes for any
+# logical grouping such as a group of users or a job group.
+#
+# Each application is defined in an Application section enclosed by Begin
+# Application and End Application
+#
+# An application can be submitted to any queue, and a queue can contain any
+# number of different applications.
+# ******************
+
+# ******************
+# APPLICATION PROFILE PARAMETERS
+# ******************
+
+# -----------------
+# NAME = application_profile_name
+# -----------------
+# The name of the application.
+#
+# Specify any ASCII string up to 60 characters long. You can use letters,
+# digits, underscores (_), blank spare ( ) or dashes (-). 
+
+# -----------------
+# DESCRIPTION = text
+# -----------------
+# Text that will be displayed by bapp -l.  This description
+# should clearly describe the service features of this application to help
+# users select the proper application for each job.
+# 
+# The text can include any characters, including white space. The 
+# text can be extended to multiple lines by ending the preceding 
+# line with a backslash (\). The maximum length for the text is 512 
+# characters.
+
+# -----------------
+# CORELIMIT, CPULIMIT, DATALIMIT, FILELIMIT, MEMLIMIT, STACKLIMIT
+# -----------------
+# Limits for various resources (see setrlimit(2)) a job associated with
+# this application may use.  These are the default limits. The limits users
+# specify when submitting jobs override these limits. These limits must be less
+# than the hard limits of the submission queue.  All except CPULIMIT are in
+# kilobytes (KB).  CPULIMIT is in minutes.  The CPULIMIT is enforced on a job 
+# level basis, while the other limits are enforced on a per-process basis.  
+# When the CPULIMIT is reached, SIGXCPU is sent to the job, followed by SIGINT, 
+# SIGTERM, and SIGKILL in sequence.
+
+# -----------------
+# PROCESSLIMIT = integer
+# -----------------
+# Specifies the number of concurrent processes that can be part
+# of a job.  SIGINT, SIGTERM, and SIGKILL are sent to the job in sequence
+# when this limit is reached.
+
+# -----------------
+# TASKLIMIT = [minimum_limit] [default_limit]] maximum_limit
+# -----------------
+# The task limit (parallelism limit) for a parallel job
+# which can be accepted by this queue.  If a submitted job requests more
+# tasks than this limit, the job is rejected.  If this is not defined, 
+# the default value is infinity.
+
+# -----------------
+# RUNLIMIT = [hour:]minute[/host_name | /host_model]
+# -----------------
+# The default run limit. The name of a host or host model specifies
+# the run time normalization host to use.
+
+# -----------------
+# RUNTIME = [hour:]minute[/host_name | /host_model]
+# -----------------
+# Specifies a run time estimate for jobs associated with an application. LSF 
+# uses the RUNTIME value for scheduling purposes only, and does not kill jobs 
+# that exceed this value unless the jobs also exceed a defined RUNLIMIT.
+
+# -----------------
+# SWAPLIMIT = integer
+# -----------------
+# Specifies the maximum virtual memory in KB of all processes in a job.
+# SIGQUIT is sent to the job when this limit is reached, followed by SIGINT, 
+# SIGTERM, and SIGKILL in sequence.
+
+# -----------------
+# THREADLIMIT = integer
+# -----------------
+# Specifies the number of concurrent threads that can be part
+# of a job. SIGINT, SIGTERM, and SIGKILL are sent to the job in sequence
+# when this limit is reached.
+
+# -----------------
+# SUSPEND_CONTROL = signal | command | CHKPNT 
+# RESUME_CONTROL = signal | command 
+# TERMINATE_CONTROL = signal | command | CHKPNT
+# -----------------
+# Specifies the action to be taken when a job is normally terminated, suspended
+# or resumed by a user or by the system. 
+# 
+# If JOB_CONTROLS parameter of queue configuration is defined, application 
+# parameters will override corresponding queue sub-parameter if job is 
+# submitted to this queue.
+
+# -----------------
+# JOB_STARTER = starter [starter] ["%USRCMD"] [starter]
+# -----------------
+# Specifies a job starter command for jobs associated with this
+# application.  When starting a job, LSF runs the JOB_STARTER command, and
+# passes the shell script containing the job's commands as the argument to the
+# JOB_STARTER.  The JOB_STARTER is expected to do some processing and then run
+# the shell script containing the job's commands.  The command is run under
+# /bin/sh -c and thus can contain any valid Bourne shell syntax.
+
+# -----------------
+# POST_EXEC = command 
+# -----------------
+# Specifies a command which is executed after a job associated with the
+# application profile has finished running on the execution host. It is also run 
+# if the PRE_EXEC command exits with a 0 exit status, but the job execution
+# environment failed to be setup. It is executed under the job user ID with
+# standard input, output and error redirected to /dev/null.
+#
+# If you also define queue POST_EXEC parameter, application POST_EXEC will
+# coexist with queue parameter. Their execution order is application
+# POST_EXEC runs first, followed by queue POST_EXEC.
+
+# -----------------
+# JOB_INCLUDE_POSTPROC = Y | N
+# -----------------
+# Enables the post-execution processing of the job to be included as part of the
+# job. CPU time and run time of post-execution is included in the job CPU time
+# and run time. sbatchd reports the job finish status after post-execution
+# completes, and job finish timestamp is the same time as the job's post-
+# execution completes. That is, mbatchd logs the job DONE and the post-execution 
+# POST_DONE or POST_ERR status at the same time.
+# The default is JOB_INCLUDE_POSTPROC = N.
+
+# -----------------
+# JOB_PREPROC_TIMEOUT = minutes
+# -----------------
+# Specify a timeout in minutes for job pre-execution processing.
+# If the job's pre-execution processing takes longer than the timeout,
+# LSF kills the job's pre-execution processes, kills the job with a pre-
+# defined exit value of 98, and then requeues the job to the head of the
+# queue. However, if the number of pre-execution retries has reached the
+# limit, LSF suspends the job with PSUSP status instead of requeuing it.
+# The specified timeout must be an integer greater than zero. The default 
+# is no timeout.
+
+# -----------------
+# JOB_POSTPROC_TIMEOUT = minutes
+# -----------------
+# Specifies a timeout in minutes for job post-execution processing. If post-
+# execution processing takes longer than the timeout, sbatchd reports the post-
+# execution has failed (POST_ERR status), and kills the process group of the
+# job's post-execution processes. The specified timeout must be greater than 
+# zero. The default is no timeout.
+
+# -----------------
+# PREEMPT_DELAY = seconds
+# -----------------
+# Preemptive jobs will wait the specified number of seconds from
+# the submission time before preemption is triggered. During this
+# time the job can be scheduled and dispatched by other
+# scheduling policies. The default is zero (preemption is immediate).
+
+# -----------------
+# PRE_EXEC = command
+# -----------------
+# Specifies a command which is executed before a job associated with the
+# application profile is dispatched on an execution host. It is executed under 
+# the job user ID with standard input, output and error redirected to /dev/null.
+#
+# Application PRE_EXEC does not overwrite queue PRE_EXEC. However, a job-level
+# PRE_EXEC (bsub -E) does overwrite application PRE_EXEC. The execution order
+# is: queue PRE_EXEC runs first, followed by either application PRE_EXEC
+# or job-level PRE_EXEC. 
+
+# -----------------
+# REQUEUE_EXIT_VALUES = [exit_code ...] [EXCLUDE(exit_code ...)]
+# -----------------
+# Enables automatic job requeue and sets the LSB_EXIT_REQUEUE environment
+# variable. Specifies exit values used by LSF to requeue the jobs associated 
+# with the application profile. Use spaces to separate multiple exit codes. 
+# Application-level exit values override queue-level values.
+#
+# The keyword, EXCLUDE, specifies that the job will never be 
+# re-dispatched to a host that it has failed on.  For example:
+# 
+#       REQUEUE_EXIT_VALUES=30 EXCLUDE(20)
+#
+# means that jobs with exit code 30 are requeued (and possibly re-dispatched to 
+# one of the failed hosts), jobs with exit code 20 are requeued exclusively
+# (will not be re-dispatched to one of the failed hosts), and jobs with any 
+# other exit code are not requeued.
+
+# -----------------
+# RERUNNABLE   = Y | y | N | n
+# -----------------
+# Jobs submitted to a queue with this option will be rerunnable.
+# The default value is 'n'. Job-level rerun overrides the RERUNNABLE value 
+# specified in the application profile, which overrides the queue specification.
+
+# -----------------
+# RES_REQ = res_req
+# -----------------
+# A resource requirement string specifying the condition for
+# dispatching a job to a host. Resource reservation and locality can
+# also be specified in this string.
+
+# -----------------
+# RTASK_GONE_ACTION = "[KILLJOB_TASKEXIT | KILLJOB_TASKDONE] [IGNORE_TASKCRASH]"
+# -----------------
+# Define the actions LSF should take if it detects that a remote task of a 
+# distributed job is gone. 
+# 
+# If not defined, LSF does nothing when a remote task is gone.
+#
+# This parameter is only applied to the blaunch distributed application framework.
+
+# -----------------
+# DJOB_ENV_SCRIPT = djob_env_script
+# -----------------
+# Specify a user-defined script for setting and cleaning up the 
+# distributed job environment. This script will be executed by LSF with the 
+# argument "setup" before launching a distributed job, and with argument "cleanup" 
+# after the distributed job is finished.
+#
+# If a full path is specified, LSF will use the path name for the execution.
+# Otherwise, LSF will look for the executable from $LSF_BINDIR.
+#
+# This parameter is only applied to the blaunch distributed application framework.
+
+# -----------------
+# DJOB_RU_INTERVAL = seconds
+# -----------------
+# The specified value in seconds will be used to calculate the Resource Usage 
+# update interval for the tasks of a distributed job.
+#
+# If DJOB_RU_INTERVAL specified
+#   interval = max(DJOB_RU_INTERVAL, 10) + <host_factor>
+# where
+#   host_factor = 0.01 * <number of hosts allocated for the distributed job>
+#
+# If DJOB_RU_INTEVAL not specified
+#   interval = SBD_SLEEP_TIME
+# where 
+#    the default value of SBD_SLEEP_TIME = 15
+#
+# This parameter is only applied to the blaunch distributed application framework.
+
+# -----------------
+# DJOB_HB_INTERVAL = seconds
+# -----------------
+# The specified value in seconds will be used to calculate the heartneat 
+# interval between task RES and job RES of a distributed job.
+#
+# If DJOB_HB_INTERVAL specified
+#   interval = max(DJOB_HB_INTERVAL, 10) + <host_factor>
+# where
+#   host_factor = 0.01 * <number of host allocated for the distributed job> 
+#
+# If DJOB_HB_INTEVAL not specified
+#   interval = SBD_SLEEP_TIME
+# where
+#    the default value of SBD_SLEEP_TIME = 15
+#
+# This parameter is only applied to the blaunch distributed application framework.
+
+# -----------------
+# DJOB_COMMFAIL_ACTION = "KILL_TASKS | IGNORE_COMMFAIL"
+# -----------------
+# Define the action LSF should take if it detects a communication failure with 
+# a remote task. If defined as KILL_TASKS, LSF tries to kill the current tasks
+# of a distributed job associated with the communication failure. If defined
+# as IGNORE_COMMFAIL, the associated communications channel is shutdown but
+# tasks will not be actively killed.
+#
+# If not defined, LSF attempts to kill the entire job.
+#
+# This parameter only applies to the blaunch distributed application framework.
+
+# -----------------
+# DJOB_DISABLED = Y | N
+# -----------------
+# Disables blaunch distributed application framework.
+#
+# If not defined, blaunch distributed application framework remains enabled.
+
+# -----------------
+# CHKPNT_DIR = checkpoint directory
+# -----------------
+# Specifies the checkpoint directory. To enable automatic checkpoint for the 
+# application profile, administrators must specify a checkpoint directory in
+# the configuration of the application profile. 
+
+# -----------------
+# CHKPNT_INITPERIOD = minutes
+# -----------------
+# Specifies the initial checkpoint period in minutes. Specify a positive 
+# integer. The periodic checkpoint will not happen until the initial period 
+# has elapsed.
+
+# -----------------
+# CHKPNT_PERIOD = minutes
+# -----------------
+# Specifies the checkpoint period in minutes. Specify a positive integer. The
+# running job is checkpointed automatically every checkpoint period.
+
+# -----------------
+# CHKPNT_METHOD = checkpoint method
+# -----------------
+# Specifies the checkpoint method.
+
+# -----------------
+# MIG = minutes
+# -----------------
+# Specifies the migration threshold in minutes. A value of 0(zero) specifies
+# that a suspended job should be migrated immediately.
+#
+# Job-level migration threshold overrides threshold configuration in 
+# application profile and queue. Application profile configuration overrides
+# queue level configuration.
+# Where a host migration threshold is also specified, and is lower than the 
+# job value, the host value is used.
+
+# -----------------
+# SUCCESS_EXIT_VALUES = [exit_code ...]
+# -----------------
+# Specifies exit values used by LSF to determine if job was done successfully.
+# Use spaces to separate multiple exit codes.
+#
+# Job-level successful exit values overrides configration in application
+# profile. Application-level successful exit values override configuration
+# in queue profile.
+
+# -----------------
+# MAX_PREEXEC_RETRY = integer
+# -----------------
+# Specifies the maximum number of times to attempt the preexecution
+# command of a job.
+
+# -----------------
+# MAX_JOB_REQUEUE = integer
+# -----------------
+# Specifies the maximum number of times to requeue a job automatically.
+
+# -----------------
+# MAX_JOB_PREEMPT = integer
+# -----------------
+# Specifies the maximum number of times that a job can be preempted.
+
+# -----------------
+# MAX_TOTAL_TIME_PREEMPT = minutes
+# -----------------
+# The accumulated preemption time in minutes after which a job
+# cannot be preempted again, where minutes is wall-clock time, not 
+# normalized time. Setting this parameter in lsb.applications overrides the
+# parameter of the same name in lsb.queues and in lsb.params.
+
+# -----------------
+# NO_PREEMPT_INTERVAL = minutes
+# -----------------
+# Prevents preemption of jobs for the specified number of minutes of 
+# uninterrupted run time, where minutes is wall-clock time, not normalized 
+# time.  NO_PREEMPT_INTERVAL=0 allows immediate preemption of jobs as soon 
+# as they start or resume running.  Setting this parameter in lsb.applications
+# overrides the parameter of the same name in lsb.queues and in lsb.params.
+
+# -----------------
+# NO_PREEMPT_RUN_TIME = minutes | percentage
+# -----------------
+# Prevents preemption of jobs that have been running for the specified
+# number of minutes or percentage of the estimated job runtime.
+#
+# If NO_PREEMPT_RUN_TIME is specified as a percentage, the job cannot
+# be preempted after running the percentage of the job duration.
+
+# -----------------
+# NO_PREEMPT_FINISH_TIME = minutes | percentage
+# -----------------
+# Prevents preemption of jobs that will finish within the specified
+# number of minutes or percentage of the estimated job runtime.
+#
+# If NO_PREEMPT_FINISH_TIME is specified as a percentage, the job
+# cannot be preempted if the job finishes within the percentage of 
+# the job duration.
+
+# -----------------
+# BIND_JOB = NONE | BALANCE | PACK | ANY | USER | USER_CPU_LIST
+# -----------------
+# Specifies which processor binding option will be applied. The processor 
+# binding only takes effect on LINUX with kernel version 2.6 or higher.
+#
+# If the processor binding option is not configured in the application 
+# profile, LSF behaves according to the configuration setting in lsf.conf. 
+# The application profile configuration for processor binding overrides the 
+# lsf.conf configuration.
+
+# -----------------
+# RESIZABLE_JOBS = Y | N | Auto
+# -----------------
+# Enables job allocations to grow and shrink during job run time.
+# The allocation resize request may be triggered automatically
+# or by the bresize command.
+#
+# If not defined, RESIZABLE_JOBS = N.
+
+# -----------------
+# RESIZE_NOTIFY_CMD = notification_command
+# -----------------
+# Specifies a notification command for jobs associated with this application.
+#
+# When a job is resized, LSF runs the notification command under the same user ID
+# and environment of the job. 
+#
+# The notification command is invoked on the first execution host of the job, and
+# is expected to inform the running application for allocation change (grow/shrink).
+# This parameter is only applicable when RESIZABLE_JOBS = Y | Auto.
+
+# -----------------
+# DJOB_RESIZE_GRACE_PERIOD = seconds
+# -----------------
+# Specifies a grace period in seconds for distributed jobs.
+# When a distributed job allocation shrinks,
+# LSF terminates the tasks running on the unallocated hosts
+# after the grace period is reached.
+#
+# If not defined, DJOB_RESIZE_GRACE_PERIOD = 0.
+# This parameter only applies to the blaunch distributed application framework,
+# when RESIZABLE_JOBS = Y | Auto.
+
+# -----------------
+# NICE = integer
+# -----------------
+# Adjusts the UNIX scheduling priority for jobs that run under this application.
+
+# -----------------
+# ENV_VARS = "name='value',name1='value1',name2='value2'"
+# -----------------
+# Specifies custom environment variables for each application.
+
+# -----------------
+# CPU_FREQUENCY = float[GHz, MHz]
+# -----------------
+# This keyword specifies the CPU frequency.
+# The value is float. Units are GHz or MHz.
+# If no units are defined, GHz is used by default.
+
+# ---------------------------------------------
+# HOST_POST_EXEC = command
+# ---------------------------------------------
+# The HOST_POST_EXEC command runs on all execution hosts after the job
+# associated with the application profile finishes.
+#
+# For detailed description, refer to LSF documentation.
+
+# ---------------------------------------------
+# HOST_PRE_EXEC = command
+# ---------------------------------------------
+# The HOST_PRE_EXEC command runs on all execution hosts before the job
+# associated with the application profile starts.
+#
+# For detailed description, refer to LSF documentation.
+
+# -----------------
+# LOCAL_MAX_PREEXEC_RETRY_ACTION = SUSPEND|EXIT
+# -----------------
+# The action taken when the job on a local or leased remote host reaches the
+# pre-execution retry limit (LOCAL_MAX_PREEXEC_RETRY).
+
+# ---------------------------------------------
+# JOB_SIZE_LIST = integer [integer ...]
+# ---------------------------------------------
+# A list of job sizes (number of tasks) that are allowed for this type of application.
+# The first job size integer is the default job size. 
+# JOB_SIZE_LIST overrides the default, minimum, and maximum values of TASKLIMIT.
+
+# ******************
+# EXAMPLE APPLICATION PROFILE CONFIGURATIONS
+# ******************
+
+#Begin Application
+#NAME         = fluent
+#DESCRIPTION  = FLUENT Version 6.2
+#CPULIMIT     = 180/hostA      # 3 hours of host hostA
+#FILELIMIT    = 20000
+#DATALIMIT    = 20000          # jobs data segment limit
+#CORELIMIT    = 20000
+#TASKLIMIT    = 5              # job task limit
+#PRE_EXEC     = /usr/local/lsf/misc/testq_pre >> /tmp/pre.out
+#POST_EXEC    = /usr/local/lsf/misc/testq_post |grep -v "Hey"
+#REQUEUE_EXIT_VALUES = 55 34 78
+#End Application
+
+#Begin Application
+#NAME         = catia
+#DESCRIPTION  = CATIA V5
+#CPULIMIT     = 24:0/hostA	 # 24 hours of host hostA
+#FILELIMIT    = 20000
+#DATALIMIT    = 20000           # jobs data segment limit
+#CORELIMIT    = 20000
+#TASKLIMIT    = 5              # job task limit
+#PRE_EXEC     = /usr/local/lsf/misc/testq_pre >> /tmp/pre.out
+#POST_EXEC    = /usr/local/lsf/misc/testq_post |grep -v "Hey"
+#REQUEUE_EXIT_VALUES = 55 34 78
+#End Application
+
+#Begin Application
+#NAME         = djob
+#DESCRIPTION  = distributed jobs
+#FILELIMIT    = 20000
+#DATALIMIT    = 2000000          # jobs data segment limit
+#RTASK_GONE_ACTION = "KILLJOB_TASKEXIT IGNORE_TASKCRASH"
+#DJOB_ENV_SCRIPT   = /lsf/djobs/proj_1/djob_env
+#DJOB_RU_INTERVAL  = 300
+#DJOB_HB_INTERVAL  = 30
+#DJOB_COMMFAIL_ACTION = "KILL_TASKS"
+#End Application
+
+#Begin Application
+#NAME         = dyna
+#DESCRIPTION  = ANSYS LS-DYNA
+#CPULIMIT     = 8:0/SunIPC	# 8 hours of host model SunIPC
+#FILELIMIT    = 20000
+#DATALIMIT    = 20000          # jobs data segment limit
+#CORELIMIT    = 20000
+#TASKLIMIT    = 5              # job task limit
+#PRE_EXEC     = /usr/local/lsf/misc/testq_pre >> /tmp/pre.out
+#POST_EXEC    = /usr/local/lsf/misc/testq_post |grep -v "Hey"
+#REQUEUE_EXIT_VALUES = 55 255 78
+#End Application
+
+#Begin Application
+#NAME         = matlab
+#DESCRIPTION  = MATLAB
+#CPULIMIT     = 15             # 15 minutes of the fastest host in the cluster
+#FILELIMIT    = 20000
+#DATALIMIT    = 20000          # jobs data segment limit
+#CORELIMIT    = 20000
+#TASKLIMIT    = 5              # job task limit
+#PRE_EXEC  
+#POST_EXEC 
+#End Application
+
+# -----------------
+# Apply a set of defaults to every application. 
+# Set DEFAULT_APPLICATION=default in lsb.params.
+# -----------------
+#Begin Application
+#NAME         = default
+#DESCRIPTION  = global defaults
+#CORELIMIT    = 0              # No core files
+#STACKLIMIT   = 200000         # Some apps do not like the default of unlimited
+#RERUNNABLE   = Y              # 
+#RES_REQ      = order[mem:ut]  # change the default ordering method
+#End Application
+
+# -----------------
+# These profiles can be used to specify commonly used parameters for 
+# application types.  For example, 4-way parallel applications are
+# loaded onto a single host by default, while 8 way applications are
+# laid out 2 per host.
+# -----------------
+#Begin Application
+#NAME         = 4proc
+#RUNTIME      = 120             # scheduling hint of 15 minutes
+#TASKLIMIT    = 4 4 4
+#RES_REQ      = span[hosts=1]
+#PRE_EXEC     = /usr/local/bin/tools/copy_dataset
+#POST_EXEC    = /usr/local/bin/tools/archive_dataset
+#End Application
+
+#Begin Application
+#NAME         = 8proc
+#RUNTIME      = 240            # scheduling hint of 15 minutes
+#TASKLIMIT    = 8 8 8 
+#RES_REQ      = span[ptile=2]
+#PRE_EXEC     = /usr/local/bin/tools/copy_dataset
+#POST_EXEC    = /usr/local/bin/tools/archive_dataset
+#End Application
+
+#Begin Application
+#NAME         = resizable
+#DESCRIPTION  = Enables running jobs to auto-resize
+#RESIZABLE_JOBS = auto 
+#RESIZE_NOTIFY_CMD = /lsf/jobs/proj_1/notify_allocation_changed
+#DJOB_RESIZE_GRACE_PERIOD = 30
+#End Application
+# ******************

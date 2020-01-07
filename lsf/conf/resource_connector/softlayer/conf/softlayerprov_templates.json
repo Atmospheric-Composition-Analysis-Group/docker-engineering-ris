@@ -1,0 +1,25 @@
+{
+    "templates": [
+        {
+            "templateId": "Template-1",
+            "maxNumber": 0,
+            "attributes": {
+                "type": ["String", "X86_64"],
+                "ncpus": ["Numeric", "4"],
+                "ncores": ["Numeric", "1"],
+                "mem": ["Numeric", "8192"],
+                "softlayercomp": ["Boolean", "1"],
+                "customattr": ["String", "somedata"]
+            },
+            "imageId": "lsfslavehosts",
+            "datacenter": "tor01",
+            "vlanNumber": "882",
+            "useHourlyPricing": true,
+            "localDiskFlag": false,
+            "privateNetworkOnlyFlag": false,
+            "dedicatedAccountHostOnlyFlag": false,
+            "postProvisionURL": "https://10.115.206.151/postprovision.sh",
+            "userData": "customattr=somedata"
+        }
+    ]
+}

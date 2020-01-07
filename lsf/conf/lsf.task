@@ -1,0 +1,54 @@
+# $Revision$Date$
+# 
+# After editing this file, run "lsadmin reconfig" and 
+# "badmin reconfig" to apply your changes.
+#
+# Unless you really think it necessary and you understand it well, you
+# don't have to change this file.
+# See lsf.task(5) and "LSF User's and Administrator's Guide".
+
+Begin RemoteTasks
+ar
+as
+cc/cpu>=0
+c89/cpu>=0
+gcc/cpu>=0
+g++/cpu>=0
+CC
+compress/-:cpu>=0:mem>=0
+compressdir/cpu>=0:mem>=0
+deroff
+diff
+ditroff
+dvi2ps
+egrep
+eqn
+f77/cpu>=0
+fgrep/
+gcc/cpu>=0
+gprof
+grap/-
+grep/-
+ispell
+lint
+latex/cpu>=0
+make/cpu>=0
+nroff/cpu>=0
+od
+pic
+psroff
+sort
+spell
+split
+tbl
+tpc
+troff/cpu>=0
+ttc
+uncompress/cpu>=0:mem>=0
+uuencode/cpu>=0
+wc
+what
+zcat/order[cpu:mem]
+zmore/cpu>=0
+End RemoteTasks
+

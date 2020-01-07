@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+#**********************************************************
+# perl.lsf:
+#    Sets the Perl user environment for LSF commands
+#
+# Instructions:
+#    o  Add "require perl.lsf" to your own Perl script. For example:
+#       "require ("/usr/elly/clusters/test/conf/perl.lsf");"
+#    o  Call function setLSFEnv() when you need to set LSF environment
+#       in your Perl script. For example:
+#        "setLSFEnv();
+#        bsub sleep 99"
+#
+#**********************************************************
+
+sub setLSFEnv
+{
+    $confile = "/opt/ibm/lsfsuite/lsf/conf/profile.lsf";
+    if(not -e $confile){
+        die "Cannot find configuration file $confile.\n";
+    }
+    @lsfenv = `. $confile; env`;
+    foreach $env (@lsfenv) {
+	($key, $value) = split (/=/, $env);
+	chomp($value);
+	if (($key eq 'PATH') ||
+		($key eq 'LD_LIBRARY_PATH') ||
+		($key eq 'MANPATH') ||
+		($key =~ m/LSF_/) ||
+		($key =~ m/EGO_/)) {
+	    $ENV{$key} = $value;
+	}
+    }
+}
+1;

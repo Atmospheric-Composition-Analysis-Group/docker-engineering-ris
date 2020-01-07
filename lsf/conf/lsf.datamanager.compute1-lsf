@@ -1,0 +1,147 @@
+# -------------------------------------------------------
+# Copyright IBM Corp. 2015. All rights reserved. 
+#
+# This is a sample LSF data management configuration file.  
+# The lsf.datamanager file controls the operation of LSF data management features.
+# There is one LSF data management configuration file for each cluster, called
+# lsf.datamanager.<cluster_name>. The <cluster_name> suffix is the name of the 
+# cluster that is defined in the Cluster section of lsf.shared. The file is read 
+# by mbatchd, dmd. The contents of this file must be identical on all clusters 
+# that share data managers.
+#
+# After editing this file, run "bdata admin reconfig" to reconfigure LSF data 
+# manager on all candidate hosts.
+#
+# -----------------
+# REQUIRED PARAMETERS
+# -----------------
+# ADMINS = user_name [user_name ... ]
+# Required list of data manager administrator users. 
+# Specify any existing user account, except root.
+# The specified users can shut down and reconfigure the data manager daemon (dmd), 
+# and use the bdata admin subcommand to remove all intermediate files that are 
+# associated with a tag.
+
+# -----------------
+# STAGING_AREA = [host_name:]abs_file_path
+# Absolute path to the top of the data management staging area as it is accessed 
+# from the LSF data manager hosts.
+# Any host that the data manager runs on must statically mount a staging area. 
+# This path must not point to a directory that has the sticky bit set in any 
+# directory in its path (such as /tmp or any subdirectory of /tmp). 
+# If no host name is specified, LSF data manager assumes that all hosts mount the 
+# staging area at the same path. If a host name is specified, the specified host 
+# name and path must be a subdirectory of an exported file system that appears in 
+# the first column of the /etc/mtab file on all hosts that mount the staging area.
+# The resolved directory must exist.
+# -----------------
+
+# -----------------
+# OPTIONAL PARAMETERS
+# -----------------
+# CACHE_INPUT_GRACE_PERIOD = minutes
+# Minimum time in minutes that an input file is kept in the LSF data manager 
+# cache after no jobs reference it.
+# After the specified number of minutes, the file can no longer be queried through
+# bdata and is physically deleted from the cache.
+# Default: 1440 minutes (1 day)
+# Valid values: 1 - 2147483647 minutes
+# -----------------
+
+# -----------------
+# CACHE_OUTPUT_GRACE_PERIOD = minutes
+# Minimum time in minutes that an output file is kept in the LSF data manager 
+# cache after its transfer completes, either successfully or unsuccessfully.
+# Default: 180 minutes (3 hours)
+# Valid values: 1 - 2147483647 minutes
+# -----------------
+
+# -----------------
+# CACHE_PERMISSIONS = user | group | all
+# Sets file permissions and ownership of the LSF data manager staging area 
+# subdirectories.
+#     CACHE_PERMISSIONS=user
+#     By default, files are stored in a user-specific subdirectory in the staging 
+#     area and are owned by that user with 700 file permission mode. If two users 
+#     ask for the same file to be pre-staged with bsub -data, LSF transfers a copy 
+#     for each of user.
+#     CACHE_PERMISSIONS=group
+#     The subdirectory is based on the main group of the transferring user, and 
+#     file permissions are set to 750.
+#     CACHE_PERMISSIONS=all
+#     Only a single cache is created for incoming files, and files are shareable 
+#     by all users. All files pre-staged with bsub -data are stored in the staging 
+#     area with permission 755, owned by the transfer job execution user. If two 
+#     users ask for the same file to be pre-staged, only one copy of the file is 
+#     pre-staged, owned by the first requesting user. CACHE_PERMISSIONS=all 
+#     assumes that other users that want to read this file belong to the same 
+#     operating system group.
+# Default: user
+# -----------------
+
+# -----------------
+# FILE_TRANSFER_CMD = command
+# The command that is used by LSF data manager to transfer data files.
+# The specified command must take two arguments of the form 
+# [host_name:]abs_file_path. The first argument is an absolute path to the
+# location of the source file and the second is absolute path to the destination 
+# of the transfer. 
+# Default: /usr/bin/scp
+# -----------------
+
+# -----------------
+# QUERY_NTHREADS = integer
+# Number of threads in the data manager client query thread pool.
+# Increase the value of QUERY_NTHREADS to improve the responsiveness of the data 
+# manager to requests by other data managers and bdata clients.
+# Default: 4
+# Valid values: 1 - 2147483647
+# -----------------
+
+# -----------------
+# REMOTE_CACHE_REFRESH_INTERVAL = seconds
+# REMOTE_CACHE_REFRESH_INTERVAL affects how often LSF data manager queries
+# LSF data managers in other clusters. After the specified number of seconds
+# has elapsed, the job assumes that the remote cluster information about this
+# file is stale, and queries the cluster for availability again.
+# Default: 15 (seconds)
+# Valid values: 1 - 2147483647
+# -----------------
+
+# -----------------
+# CACHE_ACCESS_CONTROL = Y | y | N | n
+# CACHE_ACCESS_CONTROL=Y allows the owner of a tag or file to control who can 
+# have access to a file or data tag. The file or tag owner can modify a group 
+# ownership of a tag or file and the permissions of a file in the cache. 
+# To enable CACHE_ACCESS_CONTROL, CACHE_PERMISSIONS must be set to "all" and 
+# CACHE_ACCESSIBLE_FILES must be set to "Y"
+# Default: N
+# -----------------
+
+# -----------------
+# PERMISSION_MASK = octal_mode
+# PERMISSION_MASK controls which permissions on a file can be changed with
+# the 'bdata chmod' command. CACHE_ACCESS_CONTROL=Y must be set for the 
+# PERMISSION_MASK parameter to take effect.
+# Default: 750 if CACHE_ACCESS_CONTROL=Y, otherwise 000
+# Valid values: 3 digit octal number
+# -----------------
+
+# The default and example parameter values given below are for the purpose of 
+# testing a new installation. These values may not be suitable for your 
+# production environment.
+
+Begin Parameters
+ADMINS = lsfadmin
+STAGING_AREA = /opt/ibm/lsfsuite/lsf/work/compute1-lsf/staging
+# CACHE_INPUT_GRACE_PERIOD = 1440
+# CACHE_OUTPUT_GRACE_PERIOD = 180
+# CACHE_PERMISSIONS = user
+# QUERY_NTHREADS = 4
+# REMOTE_CACHE_REFRESH_INTERVAL = 15
+End Parameters
+
+Begin RemoteDataManagers
+CLUSTERNAME             SERVERS         PORT
+# remote_das              hostA           61729
+End RemoteDataManagers

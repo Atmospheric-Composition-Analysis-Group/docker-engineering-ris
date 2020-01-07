@@ -1,0 +1,68 @@
+#-----------------------------------------------------------------------
+# Copyright IBM Corp. 1992, 2016. All rights reserved. 
+#
+# This is a sample threshold file for creating an energy policy and run 
+# time policy.  This will allow LSF to automatically select a CPU 
+# frequency used for running specific jobs.
+#
+# For more information see lsb.threshold(5) in the man pages and 
+# the Administering IBM Spectrum LSF guide.
+#
+# You may use this template by removing the commented sections below.
+# Otherwise, defaults will be used.
+#
+# ******Use the bentags command to view data on time and energy use for each job
+# and to help in setting energy and time policies.******
+#-----------------------------------------------------------------------
+# 
+# Minimize energy policy
+#    The purpose of this section is to save energy. Specify the threshold
+#    of the runtime variance for LSF to use in the energy policy. Using this
+#    threshold, LSF selects the CPU frequency that uses the least energy
+#    (POWER) where the time variation (RUNTIME_VAR) is less than the
+#    threshold value specified. Therefore, the runtime variation chosen 
+#    for the automatically selected CPU frequency must be less than or equal to the 
+#    threshold runtime variation chosen below.
+#    (POWER) - Power used, measured in watts (W).
+#    (RUNTIME_VAR) - Percentage of performance variation for a CPU frequency.
+#        A positive value indicates a performance degradation.
+#    Specify a positive integer for THRESHOLD_RUNTIME_VAR.
+#    The default threshold value is 0 if not specified.
+# Begin Min_Energy
+# THRESHOLD_RUNTIME_VAR = 0
+# End  Min_Energy
+#
+# Minimize run time policy
+#    The purpose of this section is to improve performance. 
+#    This policy allows a job to run in a frequency that is higher than the 
+#    default frequency.
+#    This policy is only available when the default frequency is less than 
+#    the nominal frequency.
+#    LSF will only consider the frequency range that is higher than the 
+#    default frequency.  
+#    When a job runs with this policy, LSF checks the time variation from 
+#    the nominal to the default frequency. The frequency is used for the job 
+#    when the time variation is less than or equal to the corresponding threshold value
+#    (the absolute value of time variation is larger than the corresponding 
+#    threshold's absolute value), which is specified here. Otherwise, LSF 
+#    checks the next frequency.
+#    The job will run in the default frequency when there is no frequency 
+#    that matches the specified threshold value.   
+#    You must specify at least two frequency values that are larger than the 
+#    default CPU frequency.
+# 
+#    The CPU_FREQ value can be given in KHz, MHz, or GHz. The default is GHz. 
+#    It must be greater than the default frequency.
+#    The RUNTIME_VAR threshold value is a negative value because a job will
+#    run faster at a higher CPU frequency.
+#
+# Begin Min_Time
+# CPU_FREQ       RUNTIME_VAR
+# 2100000KHz     -2      
+# 2200000KHz     -4
+# 2300000KHz     -9
+# 2400000KHz     -12
+# 2500000KHz     -15
+# 2700000KHz     -20
+# End Min_Time
+

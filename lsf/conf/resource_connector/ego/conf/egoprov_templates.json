@@ -1,0 +1,28 @@
+{
+  "Templates":
+  [
+    {
+      "Name": "TemplateA",
+      "Attributes": 
+      {
+        "type": ["String", "X86_64"],
+        "ncores": ["Numeric", "1"],
+        "ncpus": ["Numeric", "1"],
+        "maxmem": ["Numeric", "[512:1024]"],
+        "egohost": ["Boolean", "1"]
+      },
+      "EGO_select": "select(type=X86_64 && ncores=1 && ncpus=1 && maxmem>512 && maxmem<1024 && !mg)"
+    },
+    {
+      "Name": "TemplateB",
+      "Attributes":
+      {
+        "type": ["String", "X86_64"],
+        "ncores": ["Numeric", "1"],
+        "ncpus": ["Numeric", "2"],
+        "egohost": ["Boolean", "1"]        
+      },
+      "EGO_select": "select(type=X86_64 && ncores=1 && ncpus=2 && maxmem>2048 && maxmem<4096 && !mg)"
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+#
+# NAME:          lsb.reasons
+#
+# PURPOSE:       Configure a custom pending reason message and
+# pending reason priority for a resource.
+#
+# DESCRIPTION:   This file allows LSF administrators to configure and simplify a 
+# pending reason message. This file also allows LSF administrators
+# to configure the resource priority. If a job is pending due to the 
+# unavailability of multiple resources (with different resources and different 
+# hosts), the host lacking the resource configured with highest priority 
+# will be selected as the single pending reason.
+#
+# This file contains one or more CustomPendingReason sections.
+# After editing this file, run "badmin reconfig" to apply your changes.
+#
+# ********************************************************************
+#
+# CustomPendingReason section
+# ---------------------------
+#
+# Each set of configured pending reason messages are defined in a 
+# CustomPendingReason section enclosed by Begin CustomPendingReason 
+# and End CustomPendingReason.
+#
+# Format:
+# CustomPendingReason sections can be configured in either horizontal
+# or vertical format (using multiple lines). In the case of an error 
+# within the section, the entire section will be ignored in 
+# horizontal format or only the problem line will be ignored in
+# vertical format.
+#
+# Parameters:
+# CustomPendingReason sections may have the following parameters:
+#
+# REASON_ID is a list of pending reason IDs. All corresponding
+# messages for pending reason IDs in this list are replaced by the
+# specified message. This field must consist of one or more valid 
+# numeric reason IDs, each separated by a space.
+# This field cannot be used with the RESOURCE or PRIORITY parameters
+# in the same section.
+# For a list of all available pending reason IDs, refer to the Reference
+# at the end of this file.
+# 
+# RESOURCE is the name of the configured resource. Only one resource
+# name is allowed and the resource name must be recognized by
+# mbatchd. This field cannot be configured with REASON_ID in the
+# same CustomPendingReason section.
+#
+# PRIORITY defines the priority of the resource in the range of
+# 1 to 2147483646. The greater value has the higher priority. This
+# field cannot be configured with REASON_ID in the same CustomPendingReason
+# section.
+#
+# MESSAGE is the specified pending reason message that is displayed 
+# when the job is pending. The custom pending reason message for the 
+# configured REASON_ID is displayed when the job is pending and 
+# matches the corresponding pending reason ID. The custom pending reason 
+# message for the configured RESOURCE is displayed only when the job 
+# is pending, it lacks the corresponding resource, and the pending 
+# reason ID is PEND_HOST_JOB_RUSAGE(2601).
+# Long lines of text may be wrapped using a backslash character (\) 
+# to insert a line break.
+# In vertical format, MESSAGE should be wrapped with parenthesis(), and
+# parenthesis inside the message is not supported.
+#
+#
+# Example 1: A custom message for a particular reason
+#
+# In this example, when the pending reason of a specific job is 
+# PEND_JOB_START_FAIL(1603), PEND_JOB_START_UNKNWN(1604), 
+# PEND_SBD_NO_MEM(1605), or PEND_SBD_NO_PROCESS(1606), this shows 
+# that the job could not start on a specific host due to different 
+# issues. In such a situation, the reason could tell users that they 
+# can specify another host to get the job to run. The pending reason 
+# message can be configured in either horizontal or vertical format,
+# as follows:
+# 
+# Begin CustomPendingReason
+# REASON_ID=1603 1604 1605 1606
+# MESSAGE=There is a problem with the allocated host.\
+# Try another host by running bmod -m 'host/hostgroup list'
+# End CustomPendingReason
+#
+# Begin CustomPendingReason
+# REASON_ID MESSAGE
+# (1603 1604 1605 1606) (There is a problem with the allocated host.\
+# Try another host by running bmod -m 'host/hostgroup list')
+# End CustomPendingReason
+#
+#
+# Example 2: A custom message and priority for a particular resource
+#
+# This section highlights the key resource "gpu" by setting its priority
+# to 5. If a job is pending because multiple resources are not available,
+# but "gpu" has the highest pending reason priority, lack of the "gpu"
+# resource is mentioned as the single pending reason. Conversely, if
+# there is a resource with a pending reason priority of 6 or higher,
+# lack of the other resource is mentioned as the single pending reason,
+# instead of lack of the "gpu" resource. The pending reason message can
+# be configured in either horizontal or vertical format, as follows:
+#
+# Begin CustomPendingReason
+# RESOURCE=gpu
+# MESSAGE=All GPUs are in use.
+# PRIORITY=5
+# End CustomPendingReason
+#
+# Begin CustomPendingReason
+# RESOURCE PRIORITY MESSAGE
+# gpu 5 (All GPUs are in use.)
+# End CustomPendingReason
+#
+# ********************************************************************
+#
+# Reference
+# -----------------
+#
+# REASON_ID	MESSAGE
+# 1	New job is waiting for scheduling
+# 2	Job has a specified start time
+# 3	Job dependency condition not satisfied
+# 4	Dependency condition invalid or never satisfied
+# 5	Migrating job is waiting for rescheduling
+# 6	Job's pre-exec command exited with non-zero status
+# 7	Unable to access job file
+# 8	Unable to set job's environment variables
+# 9	Unable to determine job's home/working directories
+# 10	Unable to open job's I/O buffers
+# 11	Job execution initialization failed
+# 12	Unable to copy restarting job's checkpoint files
+# 13	The schedule of the job is postponed for a while
+# 14	Waiting for rescheduling after switching queue
+# 15	Event is rejected by eeventd due to syntax error
+# 16	JobScheduler feature is not enabled
+# 17	Failed to get user password
+# 18	Failed to logon user with password
+# 19	Waiting for rescheduling after parameters have been changed
+# 20	Time event is invalid
+# 21	Job time event expired
+# 23	Requeue the job for the next run
+# 24	Waiting for the next time event
+# 25	The parent group is held
+# 26	The parent group is inactive
+# 27	Dependency conditions satisfied, waiting for scheduling
+# 28	Remote clusters are unreachable
+# 29	SNDJOBS_TO queue rejected by remote cluster(s)
+# 30	Waiting for remote scheduling session
+# 31	Waiting for allocation replies from remote cluster(s)
+# 32	Job forwarded to a remote cluster
+# 33	Job running remotely is in a zombie state
+# 34	Job's enforced user group share account not selected
+# 35	System is unable to schedule the job
+# 36	The parent group has just been released
+# 37	Job has been run since the parent group was active
+# 38	Job array has reached its running element limit
+# 39	Checkpoint directory is invalid
+# 41	Optimum number of running jobs for SLA has been reached, or the SLA is currently releasing the resource
+# 42	Specified application profile does not exist
+# 43	Job no longer satisfies application profile TASKLIMIT/JOB_SIZE_LIST configuration
+# 44	No hosts are available from EGO 
+# 45	The specified job group has reached its job limit
+# 46	Job has reached its pre-execution retry limit
+# 47	Job has reached its requeue limit
+# 48	Incorrect resource requirement syntax
+# 49	Job is waiting for advance reservation to become active
+# 50	Waiting for user to resume job after correcting resource requirement syntax
+# 51	Job task request conflicts with total slots of compound resource requirement
+# 52	Job task request conflicts with tasks of alternative resource requirement
+# 53	Failed to send fan-out information to other SBDs
+# 54	Not enough slots to satisfy the minimal job level task size list requirement in -nlist
+# 55	Job size is either a range or does not match a value in JOB_SIZE_LIST defined in application profile
+# 56	Job size is either a range or does not match a value in JOB_SIZE_LIST defined in queue
+# 57	Number of tasks requested by the job is not a multiple of the block size
+# 58	The task size list requirement in -nlist cannot be allocated as blocks
+# 59	The task size list requirement in the application profile SLOT_SIZE_LIST cannot be allocated as blocks
+# 60	The task size list requirement in the queue-level SLOT_SIZE_LIST cannot be allocated as blocks
+# 61	Cannot allocate specified block tasks on host
+# 62	There are no suitable hosts for the job
+# 301	The queue is inactivated by the administrator
+# 302	The queue is inactivated by its time windows
+# 303	The queue has reached its job slot limit
+# 304	User has reached the per-user job slot limit of the queue
+# 305	Not enough per-user job slots of the queue for the parallel job
+# 306	The queue's pre-exec command exited with non-zero status
+# 307	Job was not accepted by the NQS host
+# 308	Unable to send the job to an NQS host
+# 309	Unable to contact NQS host
+# 310	System is not ready for scheduling after reconfiguration
+# 311	Requeued job is waiting for rescheduling
+# 312	Not enough hosts to meet the job's spanning requirement
+# 313	Not enough hosts to meet the queue's spanning requirement
+# 314	The queue has not enough job slots for the parallel job
+# 315	Job will not finish before queue's run window is closed
+# 316	Job no longer satisfies queue TASKLIMIT/JOB_SIZE_LIST configuration
+# 317	Job requeued due to plug-in failure
+# 318	Job is waiting for lease to be signed
+# 319	Job is waiting for scheduling due to SLOT_SHARE configured in queue
+# 601	The user has reached his/her job slot limit
+# 602	One of the user's groups has reached its job slot limit
+# 603	The user has not enough job slots for the parallel job
+# 604	One of user's groups has not enough job slots for the parallel job
+# 605	Waiting for scheduling after resumed by administrator or user
+# 607	Job was suspended by the user while pending
+# 608	Unable to determine user account for execution
+# 609	The user has no permission to run the job on remote host/cluster
+# 610	Job was suspended by LSF admin or root while pending
+# 611	Requested label is not valid
+# 612	Requested label is above user allowed range
+# 613	Requested label rejected by /etc/rhost.conf
+# 614	Requested label doesn't dominate current label
+# 615	Requested label problem
+# 616	Job was suspended by the user while pending
+# 617	Job resource requirements are insufficient due to user slot limit
+# 1001	Job's resource requirements not satisfied
+# 1002	Job's requirement for exclusive execution not satisfied
+# 1003	Higher or equal priority jobs suspended by host load
+# 1004	Job failed to compete with other jobs on host partition
+# 1005	Unable to get the PID of the restarting job
+# 1006	Unable to lock host for exclusively executing the job
+# 1007	Cleaning up zombie job
+# 1008	Can't run jobs submitted by root
+# 1009	Job will not finish on the host before queue's run window is closed
+# 1010	Job will not finish on the host before job's termination deadline
+# 1011	The specified first execution host is not eligible for this job at this time
+# 1012	An exclusive job has reserved the host
+# 1013	First execution candidate hosts cannot be used later in the job allocation
+# 1014	Job virtual machine container host cannot be used for scheduling
+# 1015	Host(s) not included in user-specified host file
+# 1301	Closed by LSF administrator
+# 1302	Host is locked by LSF administrator
+# 1303	Not enough job slot(s)
+# 1304	Dispatch windows closed
+# 1305	Job slot limit reached
+# 1306	Queue's per-CPU job slot limit reached
+# 1307	Queue's per-host job slot limit reached
+# 1308	User's per-CPU job slot limit reached
+# 1309	Host's per-user job slot limit reached
+# 1310	Not usable to the queue
+# 1311	Not specified in job submission
+# 1312	User has no access to the host partition
+# 1313	There is no such user account
+# 1314	Just started a job recently
+# 1315	Load information unavailable
+# 1316	LIM is unreachable now
+# 1317	No LSF software licenses
+# 1318	Queue's resource requirements not satisfied
+# 1319	Not the same type as the submission host
+# 1320	Not enough processors to meet the job's spanning requirement
+# 1321	Not enough processors to meet the queue's spanning requirement
+# 1322	Running an exclusive job
+# 1323	Not licensed to accept repetitive job
+# 1324	User group's per-CPU job slot limit reached
+# 1325	Bad host name, host group name or cluster name
+# 1326	Host or host group is not used by the queue
+# 1327	Host is locked by master LIM
+# 1328	Not enough reserved job slots at this time for specified reservation ID
+# 1329	Not enough slots or resources for whole duration of the job
+# 1330	No hosts available for the specified reservation
+# 1331	The host is closed due to lease is inactive
+# 1332	Not enough job slot(s) while advance reservation is active
+# 1333	This queue is not configured to send jobs to the cluster specified in the advance reservation
+# 1334	Individual host based reasons
+# 1335	Host does not belong to the specified advance reservation
+# 1336	Host is not a member of a compute unit of the required type
+# 1337	Host is a member of a compute unit being used exclusively
+# 1338	Host is in a compute unit not available for exclusive use
+# 1339	Host is a member of a compute unit that does not satisfy 'min_task_per_cu'
+# 1340	All first execution hosts are members of compute units that do not satisfy 'min_task_per_cu'
+# 1341	Host is a member of a compute unit with an exclusive reservation
+# 1342	Job's 'maxcus' requirement not satisfied
+# 1343	Job's 'balance' requirement not satisfied
+# 1344	Hosts using LSF HPC system integrations do not support compute unit requirements
+# 1345	Excluded from rescheduling (PRE_EXEC unsuccessful)
+# 1346	Job cannot run on hosts with \"vnode\"
+# 1347	Queue level per job host limit reached
+# 1348	Job's duration on host reduces slot or resource availability on other hosts selected for job
+# 1349	Cycle time not expired
+# 1350	Host is not suitable for jobs with a data requirement
+# 1351	The host cannot be scheduled because the sbatchd is not connected
+# 1601	Unable to reach slave batch server
+# 1602	Number of jobs exceeds quota
+# 1603	Failed in talking to server to start the job
+# 1604	Failed in receiving the reply from server when starting the job
+# 1605	Unable to allocate memory to run job
+# 1606	Unable to fork process to run job
+# 1607	Unable to communicate with job process
+# 1608	Slave batch server failed to accept job
+# 1610	Failed to restart job from last checkpoint
+# 1611	Job is in WAIT status for longer time than CHUNK_MAX_WAIT_TIME
+# 2001	Load threshold reached
+# 2301	Queue's requirements for resource reservation not satisfied
+# 2601	Job's requirements for resource reservation not satisfied
+# 2901	Remote job not recongized by remote cluster, waiting for rescheduling
+# 2902	Remote import limit reached, waiting for rescheduling
+# 2903	Remote schedule time reached, waiting for rescheduling
+# 2904	Remote pre-exec retry limit reached, waiting for rescheduling
+# 2905	Remote queue is closed
+# 2906	Remote queue is inactive
+# 2907	Remote queue is congested
+# 2908	Remote queue is disconnected
+# 2909	Remote queue is not configured to accept jobs from this cluster
+# 2910	Job's termination time exceeds the job creation time on remote cluster
+# 2911	Permission denied on the execution cluster
+# 2912	Required number of tasks for job cannot be satisfied by the remote cluster
+# 2913	User is not defined in the fairshare policy of the remote queue
+# 2914	Remote queue is a non-interactive queue
+# 2915	Remote queue is an interactive-only queue
+# 2916	Required maximum number of tasks for job is less than the minimum number of tasks defined on the remote queue
+# 2917	Required resource limit for job exceeds that of the remote queue
+# 2918	Job's resource requirements do not match with those of the remote queue
+# 2919	Job failed to be created on the remote cluster
+# 2920	Job is requeued for rerun on the execution cluster
+# 2921	Job is requeued on the execution cluster due to exit value
+# 2922	Job was killed and requeued on the execution cluster
+# 2923	Job was forwarded to remote cluster
+# 2924	Remote import queue defined for the job in lsb.queues is either not ready or not valid
+# 2925	Remote queue is a non-exclusive queue
+# 2926	Job was rejected; submitter does not belong to the specified User Group in the remote cluster or the user group does not exist in the remote cluster
+# 2927	Remote queue is rerunnable: can not accept interactive jobs
+# 2928	Remote cluster failed in talking to server to start the job
+# 2930	Job was rejected; submitter does not belong to the specified User Group in the remote cluster or the user group does not exist in the remote cluster
+# 2931	Specified remote reservation has expired or has been deleted
+# 2932	Application profile could not be found in the remote cluster
+# 2933	Required RUNLIMIT for job exceeds RUNTIME * JOB_RUNLIMIT_RATIO of the remote cluste
+# 2934	Required RUNTIME for job exceeds the hard runtime limit in the remote queue
+# 2935	No slots are available among remote queues
+# 2936	The job asked host was moved
+# 2937	No valid host in job asked hosts
+# 2938	Brun failed; job pending
+# 2939	Host or host group is not used by remote queue
+# 2940	Job has returned from remote cluster
+# 2941	Job has returned due to a remote bbot request
+# 2942	Requested clusters do not satisfy job requirement
+# 2943	Requested cluster name is not valid
+# 2944	Requested cluster is not defined in the queue for the forwarding clusters
+# 2945	Remote application profile TASKLIMIT/JOB_SIZE_LIST rejected by the queue
+# 2946	Remote import queue not suitable for job with a data requirement
+# 3201	Resource limit defined on user or user group has been reached
+# 3501	Resource limit defined on queue has been reached
+# 3801	Resource limit defined on project has been reached
+# 4101	Resource limit defined cluster-wide has been reached
+# 4401	Resource limit defined on host(s) and/or host group has been reached
+# 4701	JOBS limit defined for the user or user group has been reached
+# 4702	JOBS limit defined for the queue has been reached
+# 4703	JOBS limit defined for the project has been reached
+# 4704	JOBS limit defined cluster-wide has been reached
+# 4705	JOBS limit defined on host or host group has been reached
+# 4706	JOBS limit defined for the license project has been reached
+# 4801	FWD_TASKS limit defined for the queue has been reached
+# 4802	FWD_TASKS limit defined for the user or user group has been reached
+# 4803	FWD_TASKS limit defined for the project has been reached
+# 4804	FWD_TASKS limit defined for remote cluster has been reached
+# 4900	RMS scheduler plugin internal error
+# 4901	RLA communication failure
+# 4902	RMS is not available
+# 4903	Cannot satisfy the topology requirement
+# 4904	Cannot allocate an RMS resource
+# 4905	RMS job with special topology requirements cannot be preemptive or backfill job
+# 4906	RMS job with special topology requirements cannot reserve slots
+# 4907	RLA internal error
+# 4908	Not enough slots for job. Job with RMS topology requirements cannot reserve slots, be preemptive, or be a backfill job
+# 4909	User account does not exist on the execution host
+# 4910	Unknown host and/or partition unavailable
+# 4911	Cannot schedule chunk jobs to RMS hosts
+# 4912	RLA protocol mismatch
+# 4913	Contradictory topology requirements specified
+# 4914	Not enough slots to satisfy manditory contiguous requirement
+# 4915	Not enough slots to satisfy RMS ptile requirement
+# 4916	Not enough slots to satisfy RMS nodes requirement
+# 4917	Cannot satisfy RMS base node requirement
+# 4918	Cannot satisfy RMS rails requirement
+# 4919	Cannot satisfy RMS railmask requirement
+# 5000	Unable to communicate with external Maui scheduler
+# 5001	Job is pending at external Maui scheduler
+# 5030	External Maui scheduler sets detail reason:
+# 5200	CPUSET attach failed. Job requeued
+# 5201	Not a cpuset host
+# 5202	Topd initialization failed
+# 5203	Topd communication timeout
+# 5204	Cannot satisfy the cpuset allocation requirement
+# 5205	Bad cpuset allocation request
+# 5206	Topd internal error
+# 5207	Cpuset system API failure
+# 5208	Specified static cpuset does not exist on the host
+# 5209	Cpuset is already allocated for this job
+# 5210	Topd malloc failure
+# 5211	User account does not exist on the cpuset host
+# 5212	User does not have permission to run job within cpuset
+# 5213	Topd is not available
+# 5214	Topd communication failure
+# 5215	CPUSET Scheduler Plugin internal error
+# 5216	Cannot schedule chunk jobs to cpuset hosts
+# 5217	Cannot satisfy CPUSET CPU_LIST requirement
+# 5218	Cannot satisfy CPUSET MAX_RADIUS requirement
+# 5300	Node allocation failed
+# 5400	RMS resource is not available
+# 5450	Not enough free cpus to satisfy job requirements
+# 5451	Topology unknown or recently changed
+# 5452	Contradictory topology requirement specified
+# 5453	RLA communications failure
+# 5454	User account does not exist on execution host
+# 5455	RLA internal error
+# 5456	Unknown host and/or partition unavailable
+# 5457	Too few slots for specified topology requirement
+# 5500	PSET scheduler plugin internal error
+# 5501	Cannot satisfy PSET ptile requirement
+# 5502	Cannot satisfy PSET cells requirement
+# 5503	Cannot schedule chunk jobs to PSET hosts
+# 5504	Host does not support processor set functionality
+# 5505	PSET bind failed. Job requeued
+# 5506	Cannot satisfy PSET CELL_LIST requirement
+# 5550	SLURM scheduler plugin internal error
+# 5551	Not enough resource to satisfy SLURM nodes requirment
+# 5552	Not enough resource to satisfy SLURM node attributes requirment
+# 5553	Not enough resource to satisfy SLURM exclude requirment
+# 5554	Not enough resource to satisfy SLURM nodelist requirment
+# 5555	Not enough resource to satisfy SLURM contiguous requirment
+# 5556	SLURM allocation is not available. Job requeued
+# 5557	Invalid grammar in SLURM constraints option, job will never run
+# 5600	Not enough SSPs for job
+# 5601	Not enough MSPs for job
+# 5602	Unable to pass job limit information to psched
+# 5650	 Cannot create/confirm a reservation by apbasil/catnip
+# 5651	Recently released Cray compute node cannot be re-used at this moment
+# 5700	BG/L: Scheduler plug-in internal error
+# 5701	BG/L: Allocation is not available. Job requeued
+# 5702	BG/L: No free base partitions available for a full block allocation
+# 5703	BG/L: No free quarters available for a small block allocation
+# 5704	BG/L: No free node cards available for a small block allocation
+# 5705	Job's first execution host is unavailable
+# 5706	The job is not in the RUN state
+# 5707	Host does not satisfy job's 'same' requirement
+# 5708	Job's 'span' requirement prevents allocating for additional tasks
+# 5709	Job can only get slots on the first execution host due to 'span' requirement
+# 5710	Additional tasks can only be placed on local hosts
+# 5711	Additional slots can not be allocated on power saved hosts
+# 5750	Host does not have enough slots for this SLA job
+# 5751	EGO SLA: Failed to synchronize resource with MBD
+# 5800	MC lease hosts running LSF 7 Update 4 or earlier do not satisfy compound resource requirements
+# 5801	Hosts using LSF HPC system integrations do not support compound resource requirements
+# 5802	MC lease hosts running LSF versions prior to 9.1 do not satisfy alternative resource requirements
+# 5803	Remote MC queues for clusters running LSF versions prior to 7, update 5, do not satisfy compound resource requirements
+# 5804	Remote MC queues for clusters running LSF versions prior to 9.1 do not satisfy alternative resource requirements
+# 5805	Hosts using LSF HPC system integrations do not support alternative resource requirements
+# 5806	Remote MC queues for clusters running LSF versions prior to 9.1.1 do not satisfy compound or alternative resource requirements with global same[] sections
+# 5807	MultiCluster lease hosts running LSF versions prior to 9.1.2 do not support block in the resource requirements
+# 5808	Remote MultiCluster queues for a cluster running LSF versions prior to 9.1.2 do not support block in the resource requirements
+# 5809	User-specified host file cannot be combined with compound resource requirements
+# 5810	Remote MC queues for clusters running LSF versions prior to 10.1 do not satisfy alternative resource requirements using the cu[] feature
+# 5811	The execution cluster does not support resource requirement strings longer than 511 bytes because it is not running LSF version 10.1, or later
+# 5900	MultiCluster leased hosts running LSF Version 7 Update 5 or earlier do not satisfy multiple phase resource reservation requirements
+# 5901	Affinity resource requirement cannot be met because there are not enough processor units to satisfy the job affinity request
+# 5902	Affinity resource requirement cannot be met because there is not enough NUMA memory
+# 5903	The specified hosts do not have the required affinity processor unit resources configured
+# 5904	Affinity is not supported on leased-in hosts
+# 5905	The job with affinity resource requirement cannot be forwarded because there are no affinity hosts in remote cluster
+# 5906	Affinity binding is not enabled on the host
+# 5950	Queue has reached job slot limit of slot pool
+# 6000	Resource (%s) reserved for SLA guarantees, or not enough resources available
+# 6300	Slots are reserved for guarantees
+# 6301	Host is reserved to honor SLA guarantees
+# 6302	Per-host slot limit is reached for host in guaranteed slot pool
+# 6303	Remaining slots on host are reserved for SLA guarantees
+# 6304	Per-host slot limit on host(s) within guaranteed resource pool has been reached
+# 6305	Slots reserved for package guarantees
+# 6306	Memory reserved for package guarantees
+# 6307	Insufficient free packages on host
+# 6400	Resource limit defined on license project has been reached
+# 6701	The preemptive job is allowing a grace period before preemption
+# 6702	Job requests both project mode and cluster mode License Scheduler resources
+# 6703	External scheduler reason:
+# 6704	Resume blocked while preemption occurs for a pending job.
+# 6800	Dynamic Cluster host cannot be used for scheduling due to missing information
+# 6801	Dynamic Cluster host cannot provide the job-required physical machine template
+# 6802	Dynamic Cluster host cannot provide the job-required machine type
+# 6803	Cannot schedule the job on the Dynamic Cluster host because there is no Dynamic Cluster job requirement
+# 6804	Invalid Dynamic Cluster provisioning request
+# 6805	Failed to execute Dynamic Cluster job provisioning request
+# 6806	Dynamic Cluster server host does not have enough memory to satisfy job request
+# 6807	Some virtual machines are shutting down on Dynamic Cluster host, cannot be used for scheduling
+# 6808	Dynamic Cluster host does not have enough job slots because some virtual machine jobs are in the middle of provisioning operations
+# 6809	LSF scheduler cannot schedule jobs to use Dynamic Cluster hosts because the Dynamic Cluster scheduling plugin is not configured or not loaded
+# 6810	Dynamic Cluster virtual machine image is saved, job is waiting for rescheduling
+# 6811	Failed to restore the Dynamic Cluster virtual machine image, job is waiting for rescheduling
+# 6812	Failed to create the Dynamic Cluster machine provisioning request
+# 6813	Dynamic Cluster host does not belong to the same resource group and cannot be used to restore the saved virtual machine
+# 6814	Host is not a Dynamic Cluster host and cannot be used to restore saved virtual machines
+# 6815	Dynamic Cluster host does not have virtual machines for the job-required template or does not allow creating virtual machines for the specified template
+# 6816	Dynamic Cluster host is powering on or under provisioning
+# 6817	Dynamic Cluster host template does not match job requirements
+# 6018	Dynamic Cluster host has been reserved by a job with different physical machine templates
+# 6819	Dynamic Cluster host is not up and running
+# 6820	Cannot re-provision the Dynamic Cluster host because it has running jobs
+# 6821	LSF daemons on the Dynamic Cluster host are not ready to accept jobs
+# 6822	Dynamic Cluster host does not have enough resources because the idle virtual machines cannot be re-provisioned to meet the job requirements: There are idle virtual machines with a time to live that are not yet expired
+# 6823	Dynamic Cluster virtual machine job cannot be restored because it is not in a suspended state
+# 6824	Unable to start re-provisioning
+# 6825	The memory requirement is larger than the amount that Dynamic Cluster currently offers
+# 6826	Ineligible for re-provisioning due to the threshold for failed provisioning attempts
+# 6827	Unable to re-provision due to the value of the DC_MACHINE_MIN_TTL parameter
+# 6828	Dynamic Cluster template is not found in the remote cluster
+# 6829	Host is not a Dynamic Cluster hypervisor
+# 6830	Dynamic Cluster hypervisor cannot provide a virtual machine with the job's resource (mem) requirement larger than the amount that Dynamic Cluster currently offers
+# 6831	Dynamic Cluster hosts cannot be used to satisfy compound or alternative resource requirements
+# 6832	Dynamic Cluster VM jobs cannot use compound or alternative resource requirements
+# 6833	Dynamic Cluster virtual machine job is restarting
+# 6834	Failed to restart the Dynamic Cluster virtual machine checkpoint, job is waiting for rescheduling
+# 6835	User-specified host file cannot include Dynamic Cluster job requirements
+# 6901	Host does not have enough storage space
+# 6902	Host cannot access dataset
+# 6903	The storage that the host can access is not available
+# 6904	The storage that the host can access is closed
+# 6905	The dataset is not registered
+# 6906	Host has no close storage
+# 6907	Syntax error in -extsched option
+# 7000	LSF/XL submission cluster master and master candidate do not execute jobs
+# 7001	LSF/XL execution cluster disconnected
+# 7002	No remote queues in execution cluster is ready to accept jobs
+# 7003	Remote execution clusters do not satisfy job requirements
+# 7004	Cannot forward a remote batch job to other LSF/XL clusters
+# 7005	Reaching maximum forwarding decision per session, the schedule of the job is postponed for a while
+# 7008	LSF/XL execution cluster requires LSF Advanced Edition
+# 7011	Cannot forward a job with compound resource requirements to a remote LSF/XL cluster
+# 7012	Cannot forward a job with alternative resource requirements to a remote LSF/XL cluster
+# 7013	Cannot forward a job with a data requirement to a remote LSF/XL cluster
+# 7101	Job requirements for threshold of resource not satisfied
+# 7401	Not enough windows on the network
+# 7402	Dedicated job cannot run because the network is occupied by another POE job
+# 7403	Network window is occupied by another dedicated POE job
+# 7404	Network cannot be used due to network failure
+# 7405	Forwarding a job with a network requirement to a remote cluster running an LSF version prior to 9.1.1 is not supported
+# 7406	Job requests more network window instances than MAX_PROTOCOL_INSTANCES
+# 7407	Job with network requirement cannot be checkpointed
+# 7408	Network aware scheduling feature is not enabled
+# 7409	Cannot run POE job on lease-in host
+# 7430	The job's host-based queue level pre-exec command exited with non-zero status
+# 7431	The job's host-based application level pre-exec command exited with non-zero status
+# 7450	CPU frequency management is disabled. Job cannot request a CPU frequency
+# 7451	LSF_MANAGE_FREQUENCY=HOST in lsf.conf. Job requires exclusive use (bsub -x) of host
+# 7452	LSF_MANAGE_FREQUENCY=CORE in lsf.conf. Job must be submitted with affinity resource requirements
+# 7453	CPU Frequency/Energy collection job does not automatically resize.
+# 7454	Energy policy tag generation and automatic CPU frequency selection is disabled. Job cannot request tag generation or automatic CPU frequency selection
+# 7455	Jobs requiring energy policy tag generation or automatic CPU frequency selection require exclusive use (bsub -x) of the host
+# 7500	Job is waiting for its data requirement to be satisfied
+# 7600	User-specified host file cannot be combined with external scheduling options
+#
+# ********************************************************************

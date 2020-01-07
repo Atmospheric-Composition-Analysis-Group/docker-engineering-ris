@@ -1,0 +1,25 @@
+{
+  "Username": "",
+  "Password": "",
+  "StartLSFCmd": "",
+  "StopLSFCmd": "",
+  "LogLevel": "WARNING",  
+  "EGOConf": "egoprov_ego.conf",  
+  "ClientName": "ResProvider",
+  "AllocationName": "ResProvider",  
+  "Umask": "0777",
+  "GracePeriod": "60",
+  "ExecCwd": "/tmp",
+  "EGOSharedHostsResourceGroup": 
+  [
+    {
+    "Name": "",
+    "Consumer4LSF": ""
+    },
+    {
+    "Name": "",
+    "Consumer4LSF": ""
+    }
+  ]
+}
+

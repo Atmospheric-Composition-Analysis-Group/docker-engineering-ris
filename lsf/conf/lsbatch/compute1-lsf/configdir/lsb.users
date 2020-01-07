@@ -1,0 +1,29 @@
+# $Revision$Date$
+
+# After editing this file, run "badmin reconfig" to apply your changes.
+
+# User groups can be referenced by the lsb.hosts and lsb.queues files.
+
+# All the example definitions here are commented out
+
+Begin UserGroup
+GROUP_NAME       GROUP_MEMBER              USER_SHARES            #GROUP_ADMIN
+#ugroup1         (user1 user2 user3 user4) ([user1, 4] [others, 10])   #(user1 user2[full])
+#ugroup2         (all)                     ([user3, 10] [others, 15])  #(user3[usershares])
+#ugroup3         (ugroup1 user5 user6 user7)     ([user5, 16] [user6, 34] [user7, 15] [ugroup1, 40])  #()
+End UserGroup
+
+Begin User
+USER_NAME        MAX_PEND_JOBS
+#user1           800            # user1 has pend threshold of 800 
+#ugroup1@        500            # each user in ugroup1 has threshold of 100 
+#ugroup1         1000           # collectively ugroup1 has threshold of 1000
+#default         100            # default, any user/group has threshold of 100
+End User
+
+# User group for all LSF administrators
+Begin UserGroup
+GROUP_NAME    GROUP_MEMBER      #USER_SHARES # Key words
+lsfadmins     (lsfadmin )
+End UserGroup
+

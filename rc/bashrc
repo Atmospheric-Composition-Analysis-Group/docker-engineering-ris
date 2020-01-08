@@ -40,7 +40,9 @@ source /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64 && \
 source /opt/ibm/lsfsuite/lsf/conf/profile.lsf 
 
 . /opt/spack/share/spack/setup-env.sh
-export MODULEPATH=$MODULEPATH:/usr/share/modulefiles
+
+#LSF: I have to add the cascadelake architecture here since not all of them will detect it.
+export MODULEPATH=$MODULEPATH:/usr/share/modulefiles:/opt/spack/share/spack/modules/linux-centos7-cascadelake
 export gFTL_ROOT=/opt/gFTL/GFTL-1.2/include
 spack load hdf5
 spack load netcdf-c

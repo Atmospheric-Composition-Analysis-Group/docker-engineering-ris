@@ -31,14 +31,14 @@ RUN yum groupinstall -y 'Development Tools' \
 &&  chmod 755 /etc/bashrc /etc/zshenv
 
 RUN cd /opt && git clone https://github.com/spack/spack.git
-COPY spack/etc/spack/packages.yaml /spack/etc/spack/packages.yaml
+COPY spack/etc/spack/packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
 COPY spack/etc/spack/compilers.yaml /etc/spack/compilers.yaml
 COPY env2 /env2
 
-RUN mkdir -p /usr/share/modulefiles/intel \
-&&   echo "#%Module" > /usr/share/modulefiles/intel/20 \
+RUN mkdir -p /usr/share/Modules/modulefiles/intel \
+&&   echo "#%Module" > /usr/share/Modules/modulefiles/intel/20 \
 &&   chmod +x /env2 \
-&&   perl /env2 -from bash -to modulecmd "/opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64" >> /usr/share/modulefiles/intel/20 \
+&&   perl /env2 -from bash -to modulecmd "/opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64" >> /usr/share/Modules/modulefiles/intel/20 \
 &&   rm /env2
 
 # Detect intel compilers with spack
@@ -46,17 +46,22 @@ RUN    . /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64 &&
     spack compiler find && \
     chmod 755 /etc/bashrc /etc/zshenv
 
+COPY licenses /opt/intel/licenses
+
 # Install ESMF
 RUN . /usr/share/Modules/init/sh && module load intel/20 && \
     for i in $(spack find target=x86_64 | grep -v "^--" | grep -v "^=="); do spack uninstall --dependents -y $i target=x86_64; done && \
     spack bootstrap && \
-    spack install -v netcdf-c ^hdf5 ^openmpi && \
-    spack install -v netcdf-fortran ^hdf5 ^openmpi 
+    spack install -v netcdf-c ^hdf5 ^intel-mpi && \
+    spack install -v netcdf-fortran ^hdf5 ^intel-mpi
 
 # && spack install --no-checksum esmf@8.0.0 -lapack -pio -pnetcdf -xerces ^hdf5 ^openmpi
 
+RUN spack compiler find
+
 # Install gFTL
-RUN git clone https://github.com/Goddard-Fortran-Ecosystem/gFTL.git /gFTL \
+RUN . /usr/share/Modules/init/sh && module load intel/20 && \
+    . /etc/bashrc && git clone https://github.com/Goddard-Fortran-Ecosystem/gFTL.git /gFTL \
 &&  cd /gFTL \
 &&  mkdir build \
 &&  cd build \
@@ -64,7 +69,6 @@ RUN git clone https://github.com/Goddard-Fortran-Ecosystem/gFTL.git /gFTL \
 &&  make -j install \
 &&  rm -rf /gFTL
 
-COPY licenses /opt/intel/licenses
 RUN cd /tmp/ && \
     git clone https://git.code.sf.net/p/esmf/esmf && cd esmf && \
     git checkout -b ESMF_8_0_0 && mkdir -p /opt/ibm/lsfsuite/lsf/conf/ && \

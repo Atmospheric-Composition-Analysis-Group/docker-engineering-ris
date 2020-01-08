@@ -1,7 +1,8 @@
 compilers:
 - compiler:
     environment: {}
-    extra_rpaths: []
+    extra_rpaths:
+      - /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib 
     flags: {}
     modules: []
     operating_system: centos7

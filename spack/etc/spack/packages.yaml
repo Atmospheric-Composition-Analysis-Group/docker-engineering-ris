@@ -115,9 +115,9 @@ packages:
     paths:
       lsf@10.1: /opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64
     buildable: False
-  openmpi:
+  intel-mpi:
     paths:
-      openmpi: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+      intel-mpi: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64
     buildable: False
   all:
     compiler: [ intel@2020 ]

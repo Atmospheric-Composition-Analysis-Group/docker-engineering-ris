@@ -43,7 +43,8 @@ source /opt/ibm/lsfsuite/lsf/conf/profile.lsf
 
 #LSF: I have to add the cascadelake architecture here since not all of them will detect it.
 export MODULEPATH=$MODULEPATH:/usr/share/Modules/modulefiles:/opt/spack/share/spack/modules/linux-centos7-cascadelake
-export gFTL_ROOT=/opt/gFTL/GFTL-1.2/include
+export gFTL_ROOT=/opt/gFTL/GFTL-1.2
+export ESMF_ROOT=/usr/local
 spack load hdf5
 spack load netcdf-c
 spack load netcdf-fortran

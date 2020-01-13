@@ -94,8 +94,6 @@ FROM registry.gsc.wustl.edu/sleong/base-icc-ifort-mpi-mlx
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/intel/bin:/opt/spack/bin
 COPY --from=build /opt /opt
 COPY --from=build /etc/spack/compilers.yaml /etc/spack/compilers.yaml
-COPY --from=build /etc/bashrc /etc/bashrc
-COPY --from=build /etc/zshenv /etc/zshenv
 COPY --from=build /usr/share/Modules /usr/share/Modules
 COPY --from=build /tmp/esmf-install /usr/local
 
@@ -117,6 +115,9 @@ RUN yum install -y tzdata lsb-release bison tcl dpatch chrpath flex gfortran aut
                    &&  wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh \
                    &&  yum clean -y all \
                    &&  chmod 755 /etc/bashrc /etc/zshenv
+
+COPY --from=build /etc/bashrc /etc/bashrc
+COPY --from=build /etc/zshenv /etc/zshenv
 
 ENV ESMF_ROOT /usr/local
 ENV gFTL_ROOT /opt/gFTL/GFTL-1.2/

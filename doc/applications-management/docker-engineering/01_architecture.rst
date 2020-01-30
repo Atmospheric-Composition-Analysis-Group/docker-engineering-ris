@@ -1,0 +1,7 @@
+============
+Architecture
+============
+
+.. contents::
+   :local:
+

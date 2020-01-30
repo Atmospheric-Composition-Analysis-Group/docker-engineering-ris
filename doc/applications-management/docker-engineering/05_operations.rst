@@ -1,0 +1,7 @@
+==========
+Operations
+==========
+
+.. contents::
+   :local:
+

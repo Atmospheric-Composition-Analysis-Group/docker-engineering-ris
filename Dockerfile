@@ -19,8 +19,9 @@ ENV LSF_LIBDIR /opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib
 
 RUN yum groupinstall -y 'Development Tools' \
 &&  yum install -y epel-release \
-&&  yum -y install  https://centos7.iuscommunity.org/ius-release.rpm \
-&&  yum -y remove git* && yum -y install  git2u-all \
+&&  yum -y install  https://repo.ius.io/ius-release-el7.rpm \
+&& yum clean all \
+&&  yum -y remove git* && yum -y install git236-all \
 &&  yum install -y zsh wget vim cmake3 sssd gcc c++ g++ \
 &&  ln -s /usr/bin/cmake3 /usr/bin/cmake \
 &&  export ZSH=/usr/share/oh-my-zsh \
@@ -51,7 +52,6 @@ COPY licenses /opt/intel/licenses
 # Install ESMF
 RUN . /usr/share/Modules/init/sh && module load intel/20 && \
     for i in $(spack find target=x86_64 | grep -v "^--" | grep -v "^=="); do spack uninstall --dependents -y $i target=x86_64; done && \
-    spack bootstrap && \
     spack install -v netcdf-c ^hdf5 ^intel-mpi && \
     spack install -v netcdf-fortran ^hdf5 ^intel-mpi
 
@@ -69,17 +69,19 @@ RUN . /usr/share/Modules/init/sh && module load intel/20 && \
 &&  make -j install \
 &&  rm -rf /gFTL
 
-RUN export FORCE_UNSAFE_CONFIGURE=1 &&  . /usr/share/Modules/init/sh && module load intel/20 && . /etc/bashrc && spack install nco
+RUN export FORCE_UNSAFE_CONFIGURE=1 &&  . /usr/share/Modules/init/sh && module load intel/20 && . /etc/bashrc && spack install nco@4.9.3
 
-RUN cd /tmp/ && \
+RUN . /usr/share/Modules/init/sh && \
+    cd /tmp/ && \
     git clone https://git.code.sf.net/p/esmf/esmf && cd esmf && \
     git checkout -b ESMF_8_0_0 && mkdir -p /opt/ibm/lsfsuite/lsf/conf/ && \
     touch /opt/ibm/lsfsuite/lsf/conf/profile.lsf && \
     . /etc/bashrc && export FORCE_UNSAFE_CONFIGURE=1 && \
+    . /opt/spack/share/spack/setup-env.sh && \
     module load intel/20 && \
-    /opt/spack/bin/spack load hdf5 && \
-    /opt/spack/bin/spack load netcdf-c && \
-    /opt/spack/bin/spack load netcdf-fortran && \
+    spack load hdf5 && \
+    spack load netcdf-c && \
+    spack load netcdf-fortran && \
     mkdir /tmp/esmf-install && \
     export ESMF_COMPILER=intel && \
     export ESMF_DIR=/tmp/esmf && \
@@ -105,8 +107,8 @@ RUN yum install -y tzdata lsb-release bison tcl dpatch chrpath flex gfortran aut
                    xorg-x11-util-macros libpciaccess-devel numactl libxml2-devel gettext help2man libuuid-devel libjpeg* && \
                    yum groupinstall -y 'Development Tools' \
                    &&  yum install -y epel-release \
-                   &&  yum -y install  https://centos7.iuscommunity.org/ius-release.rpm \
-                   &&  yum -y remove git* && yum -y install  git2u-all \
+                   &&  yum -y install https://repo.ius.io/ius-release-el7.rpm \
+                   &&  yum -y remove git* && yum -y install  git236-all \
                    &&  yum install -y zsh wget vim cmake3 sssd gcc c++ g++ \
                    &&  yum groupinstall 'Xfce' -y \
                    &&  yum -y install tigervnc-server tigervnc-server-minimal \

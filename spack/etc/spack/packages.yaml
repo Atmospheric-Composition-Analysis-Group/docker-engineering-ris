@@ -1,123 +1,169 @@
 packages:
   tcl:
-    paths:
-      tcl: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: tcl@8.6
+      prefix: /usr
   environment-modules:
-    paths:
-      environment-modules: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: environment-modules@3.2.10
+      prefix: /usr
   pkgconf:
-    paths:
-      pkgconf: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: pkgconf@0.27.1
+      prefix: /usr
   xz:
-    paths:
-      xz: /usr
-    buildable: False
-  zlib:
-    paths:
-      zlib: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: xz@5.2.2
+      prefix: /usr
   libxml2:
-    paths:
-      libxml2: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: libxml2@2.9.1
+      prefix: /usr
   libsigsegv:
-    paths:
-      libsigsegv: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: libsigsegv@2.10.0
+      prefix: /usr
   m4:
-    paths:
-      m4: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: m4@1.4.16
+      prefix: /usr
   ncurses:
-    paths:
-      ncurses: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: ncurses@5.9
+      prefix: /usr
   readline:
-    paths:
-      readline: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: readline@6.2
+      prefix: /usr
   gdbm:
-    paths:
-      gdbm: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: gdbm@1.10
+      prefix: /usr
   perl:
-    paths:
-      perl: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: perl@5.16.3
+      prefix: /usr
   autoconf:
-    paths:
-      autoconf: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
   automake:
-    paths:
-      automake: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: automake@1.13.4
+      prefix: /usr
   libtool:
-    paths:
-      libtool: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: libtool@2.4.2
+      prefix: /usr
   texinfo:
-    paths:
-      texinfo: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: texinfo@5.1
+      prefix: /usr
   findutils:
-    paths:
-      findutils: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: findutils@4.5.11
+      prefix: /usr
   util-macros:
-    paths:
-      util-macros: /usr
-    buildable: False 
+    buildable: false
+    externals:
+    - spec: util-macros@1.19.0
+      prefix: /usr
   libpciaccess:
-    paths:
-      libpciaccess: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: libpciaccess@0.14
+      prefix: /usr
   numactl:
-    paths:
-      numactl: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: numactl@2.0.12
+      prefix: /usr
   bzip2:
-    paths:
-      bzip2: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: bzip2@1.0.6
+      prefix: /usr
   tar:
-    paths:
-      tar: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: tar@1.26
+      prefix: /usr
   gettext:
-    paths:
-      gettext: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: gettext@0.19.8.1
+      prefix: /usr
   help2man:
-    paths:
-      help2man: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: help2man@1.41.1
+      prefix: /usr
   bison:
-    paths:
-      bison: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: bison@3.0.4
+      prefix: /usr
   libuuid:
-    paths:
-      libuuid: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: libuuid@2.23.2
+      prefix: /usr
   flex:
-    paths:
-      flex: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: flex@2.5.37
+      prefix: /usr
   cmake:
-    paths:
-      cmake: /usr
-    buildable: False
+    buildable: false
+    externals:
+    - spec: cmake@3.17.5
+      prefix: /usr
+  libedit:
+    buildable: false
+    externals:
+    - spec: libedit@3.0
+      prefix: /usr
+  openssh:
+    buildable: false
+    externals:
+    - spec: openssh@7.4
+      prefix: /usr
+  gcc:
+    buildable: false
+    externals:
+    - spec: gcc@4.8
+      prefix: /usr
+    - spec: gcc@7
+      modules:
+      - gcc/7
+    - spec: gcc@8
+      modules:
+      - gcc/8
   lsf:
-    paths:
-      lsf@10.1: /opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64
-    buildable: False
+    buildable: false
+    externals:
+    - spec: lsf@10.1
+      prefix: /opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64
   intel-mpi:
-    paths:
-      intel-mpi: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64
     buildable: False
+    externals:
+    - spec: intel-mpi@2020    
+      prefix: /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64
   all:
     compiler: [ intel@2020 ]

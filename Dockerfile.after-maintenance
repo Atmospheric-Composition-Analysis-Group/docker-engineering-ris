@@ -1,4 +1,4 @@
-FROM registry.gsc.wustl.edu/sleong/base-icc-ifort-mpi-mlx as build
+FROM registry.gsc.wustl.edu/sleong/base-icc-ifort-mpi-mlx:after-maintenance as build
 
 ENV SPACK_ROOT /opt/spack
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/intel/bin:/opt/spack/bin
